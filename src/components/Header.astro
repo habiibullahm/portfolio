@@ -25,7 +25,7 @@ import { nav, site } from "../data/site";
               <a
                 href={item.href}
                 data-nav-link={item.id}
-                aria-current={item.id === "home" ? "page" : "false"}
+                {...(item.id === "home" ? { "aria-current": "true" } : {})}
                 class:list={[
                   "inline-block rounded-md px-2.5 py-2 font-display text-xs font-medium no-underline transition-colors md:px-3 md:text-sm",
                   item.id === "home" ? "bg-accent text-white" : "text-muted hover:text-ink",

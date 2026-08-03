@@ -1,12 +1,23 @@
-const sections = ["home", "work", "about", "experience", "contact"] as const;
+/** Section ids observed for scroll-spy. Focus maps to Home in the nav. */
+const sections = ["home", "focus", "work", "about", "experience", "contact"] as const;
 
-function setActive(id: string) {
+function navIdForSection(sectionId: string): string {
+  return sectionId === "focus" ? "home" : sectionId;
+}
+
+function setActive(sectionId: string) {
+  const activeNav = navIdForSection(sectionId);
   document.querySelectorAll<HTMLAnchorElement>("[data-nav-link]").forEach((link) => {
-    const match = link.dataset.navLink === id;
-    link.setAttribute("aria-current", match ? "page" : "false");
-    link.classList.toggle("bg-accent", match);
-    link.classList.toggle("text-white", match);
-    link.classList.toggle("text-muted", !match);
+    const match = link.dataset.navLink === activeNav;
+    if (match) {
+      link.setAttribute("aria-current", "true");
+      link.classList.add("bg-accent", "text-white");
+      link.classList.remove("text-muted");
+    } else {
+      link.removeAttribute("aria-current");
+      link.classList.remove("bg-accent", "text-white");
+      link.classList.add("text-muted");
+    }
   });
 }
 

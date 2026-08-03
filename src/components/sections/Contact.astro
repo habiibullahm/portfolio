@@ -1,7 +1,7 @@
 ---
 import { safeExternalUrl, site } from "../../data/site";
 
-const mailto = `mailto:${site.email}`;
+const mailto = safeExternalUrl(`mailto:${site.email}`);
 const github = safeExternalUrl(site.socials.github);
 const linkedin = safeExternalUrl(site.socials.linkedin);
 ---
@@ -14,12 +14,16 @@ const linkedin = safeExternalUrl(site.socials.linkedin);
       Reach out by email or LinkedIn — no public CV download, keep it simple.
     </p>
     <div class="mt-8 flex flex-wrap gap-4">
-      <a
-        href={mailto}
-        class="inline-flex rounded-md bg-accent px-5 py-3 font-display text-sm font-medium text-white no-underline hover:bg-accent/90"
-      >
-        {site.email}
-      </a>
+      {
+        mailto && (
+          <a
+            href={mailto}
+            class="inline-flex rounded-md bg-accent px-5 py-3 font-display text-sm font-medium text-white no-underline hover:bg-accent/90"
+          >
+            {site.email}
+          </a>
+        )
+      }
       {
         linkedin && (
           <a

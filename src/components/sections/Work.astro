@@ -21,10 +21,14 @@ const projects = (await getCollection("projects"))
           const repo = project.data.links?.repo
             ? safeExternalUrl(project.data.links.repo)
             : null;
+          const imageSrc = project.data.image.startsWith("/") && !project.data.image.startsWith("//")
+            ? project.data.image
+            : null;
+          if (!imageSrc) return null;
           return (
             <li class="grid gap-6 md:grid-cols-[1.2fr_1fr] md:items-center">
               <img
-                src={project.data.image}
+                src={imageSrc}
                 alt={project.data.imageAlt}
                 width="1200"
                 height="720"

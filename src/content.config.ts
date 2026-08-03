@@ -10,7 +10,10 @@ const projects = defineCollection({
     client: z.string(),
     domain: z.string(),
     order: z.number(),
-    image: z.string(),
+    /** Site-relative only (OWASP: no remote/scriptable image URLs). */
+    image: z
+      .string()
+      .regex(/^\/(?!\/)/, "Image must be a root-relative path like /images/..."),
     imageAlt: z.string(),
     draft: z.boolean().default(false),
     links: z

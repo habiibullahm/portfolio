@@ -17,9 +17,11 @@ const { title = site.seo.title, description = site.seo.description } = Astro.pro
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <link rel="canonical" href={Astro.site ? new URL(Astro.url.pathname, Astro.site).href : Astro.url.href} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
+    <meta property="og:image" content="/images/work/task-management.svg" />
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />

@@ -4,6 +4,7 @@ import { safeExternalUrl, site } from "../data/site";
 const year = new Date().getFullYear();
 const github = safeExternalUrl(site.socials.github);
 const linkedin = safeExternalUrl(site.socials.linkedin);
+const linktree = safeExternalUrl(site.socials.linktree);
 ---
 
 <footer class="bg-ink text-mist">
@@ -14,7 +15,7 @@ const linkedin = safeExternalUrl(site.socials.linkedin);
       {site.name}
       <span class="text-mist/60"> · {year}</span>
     </p>
-    <div class="flex gap-4 text-sm">
+    <div class="flex flex-wrap gap-4 text-sm">
       {
         github && (
           <a
@@ -36,6 +37,18 @@ const linkedin = safeExternalUrl(site.socials.linkedin);
             class="text-mist/80 no-underline hover:text-mist"
           >
             LinkedIn
+          </a>
+        )
+      }
+      {
+        linktree && (
+          <a
+            href={linktree}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-mist/80 no-underline hover:text-mist"
+          >
+            Linktree
           </a>
         )
       }
