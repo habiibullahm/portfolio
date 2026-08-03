@@ -1,0 +1,16 @@
+---
+import { site } from "../../data/site";
+---
+
+<section id="about" data-section class="section-anchor border-b border-line">
+  <div class="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-20">
+    <p class="font-mono text-xs tracking-widest text-muted">ABOUT</p>
+    <h2 class="mt-2 text-2xl md:text-3xl">Builder who ships, then scales the system.</h2>
+    <div class="mt-10 grid gap-10 md:grid-cols-2">
+      <p class="text-base leading-relaxed text-muted md:text-lg">{site.about}</p>
+      <ul class="space-y-2 font-mono text-sm text-ink">
+        {site.skills.map((skill) => <li class="border-b border-line/70 pb-2">{skill}</li>)}
+      </ul>
+    </div>
+  </div>
+</section>

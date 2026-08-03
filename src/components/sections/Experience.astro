@@ -1,0 +1,26 @@
+---
+import { experience } from "../../data/site";
+---
+
+<section id="experience" data-section class="section-anchor border-b border-line">
+  <div class="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-20">
+    <p class="font-mono text-xs tracking-widest text-muted">EXPERIENCE</p>
+    <h2 class="mt-2 text-2xl md:text-3xl">Roles with one concrete win each.</h2>
+    <ul class="mt-10 space-y-8">
+      {
+        experience.map((item) => (
+          <li class="grid gap-2 border-t border-line pt-6 md:grid-cols-[1fr_auto]">
+            <div>
+              <h3 class="text-lg md:text-xl">
+                {item.role}
+                <span class="text-muted"> · {item.company}</span>
+              </h3>
+              <p class="mt-2 text-muted">{item.win}</p>
+            </div>
+            <p class="font-mono text-xs text-muted md:text-right">{item.years}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

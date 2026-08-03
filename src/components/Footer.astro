@@ -1,0 +1,44 @@
+---
+import { safeExternalUrl, site } from "../data/site";
+
+const year = new Date().getFullYear();
+const github = safeExternalUrl(site.socials.github);
+const linkedin = safeExternalUrl(site.socials.linkedin);
+---
+
+<footer class="bg-ink text-mist">
+  <div
+    class="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-10 md:flex-row md:items-center md:justify-between md:px-6"
+  >
+    <p class="font-display text-sm">
+      {site.name}
+      <span class="text-mist/60"> · {year}</span>
+    </p>
+    <div class="flex gap-4 text-sm">
+      {
+        github && (
+          <a
+            href={github}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-mist/80 no-underline hover:text-mist"
+          >
+            GitHub
+          </a>
+        )
+      }
+      {
+        linkedin && (
+          <a
+            href={linkedin}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-mist/80 no-underline hover:text-mist"
+          >
+            LinkedIn
+          </a>
+        )
+      }
+    </div>
+  </div>
+</footer>

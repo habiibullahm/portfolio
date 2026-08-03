@@ -1,0 +1,43 @@
+---
+import { nav, site } from "../data/site";
+---
+
+<header
+  class="sticky top-0 z-40 border-b border-line/80 bg-mist/95 backdrop-blur-sm"
+>
+  <div
+    class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 md:px-6"
+  >
+    <a href="#home" class="min-w-0 shrink-0 no-underline">
+      <span class="block font-display text-sm font-semibold text-ink md:text-base">
+        {site.name}
+      </span>
+      <span class="mt-0.5 hidden font-mono text-[10px] tracking-widest text-muted sm:block">
+        {site.chips.join(" · ")}
+      </span>
+    </a>
+
+    <nav aria-label="Primary" class="min-w-0 flex-1 overflow-x-auto">
+      <ul class="flex flex-nowrap justify-end gap-1">
+        {
+          nav.map((item) => (
+            <li class="shrink-0">
+              <a
+                href={item.href}
+                data-nav-link={item.id}
+                aria-current={item.id === "home" ? "page" : "false"}
+                class:list={[
+                  "inline-block rounded-md px-2.5 py-2 font-display text-xs font-medium no-underline transition-colors md:px-3 md:text-sm",
+                  item.id === "home" ? "bg-accent text-white" : "text-muted hover:text-ink",
+                ]}
+              >
+                <span class="md:hidden">{item.short}</span>
+                <span class="hidden md:inline">{item.label}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>

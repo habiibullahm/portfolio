@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720" role="img">
+  <rect width="1200" height="720" fill="#115e59"/>
+  <rect x="100" y="120" width="1000" height="480" rx="20" fill="#f7f9fb" opacity="0.1"/>
+  <rect x="180" y="200" width="200" height="120" rx="10" fill="#5eead4" opacity="0.35"/>
+  <rect x="420" y="200" width="200" height="120" rx="10" fill="#5eead4" opacity="0.25"/>
+  <rect x="660" y="200" width="200" height="120" rx="10" fill="#5eead4" opacity="0.2"/>
+  <rect x="180" y="360" width="680" height="18" rx="4" fill="#f7f9fb" opacity="0.5"/>
+  <rect x="180" y="400" width="520" height="14" rx="3" fill="#f7f9fb" opacity="0.35"/>
+  <text x="180" y="620" fill="#ecfdf5" font-family="Segoe UI, sans-serif" font-size="28">Money Management</text>
+</svg>
