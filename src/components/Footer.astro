@@ -4,7 +4,6 @@ import { safeExternalUrl, site } from "../data/site";
 const year = new Date().getFullYear();
 const github = safeExternalUrl(site.socials.github);
 const linkedin = safeExternalUrl(site.socials.linkedin);
-const linktree = safeExternalUrl(site.socials.linktree);
 ---
 
 <footer class="bg-ink text-mist">
@@ -12,19 +11,25 @@ const linktree = safeExternalUrl(site.socials.linktree);
     class="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-10 md:flex-row md:items-center md:justify-between md:px-6"
   >
     <p class="font-display text-sm">
-      {site.name}
-      <span class="text-mist/60"> · {year}</span>
+      © {year} {site.name}.
     </p>
-    <div class="flex flex-wrap gap-4 text-sm">
+    <div class="flex flex-wrap items-center gap-4">
       {
         github && (
           <a
             href={github}
             target="_blank"
             rel="noopener noreferrer"
-            class="text-mist/80 no-underline hover:text-mist"
+            aria-label="GitHub"
+            class="inline-flex text-mist/80 no-underline transition hover:text-mist"
           >
-            GitHub
+            <img
+              src="/images/icons/github.svg"
+              alt=""
+              width="22"
+              height="22"
+              class="size-[22px]"
+            />
           </a>
         )
       }
@@ -34,21 +39,16 @@ const linktree = safeExternalUrl(site.socials.linktree);
             href={linkedin}
             target="_blank"
             rel="noopener noreferrer"
-            class="text-mist/80 no-underline hover:text-mist"
+            aria-label="LinkedIn"
+            class="inline-flex text-mist/80 no-underline transition hover:text-mist"
           >
-            LinkedIn
-          </a>
-        )
-      }
-      {
-        linktree && (
-          <a
-            href={linktree}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-mist/80 no-underline hover:text-mist"
-          >
-            Linktree
+            <img
+              src="/images/icons/linkedin.svg"
+              alt=""
+              width="22"
+              height="22"
+              class="size-[22px]"
+            />
           </a>
         )
       }

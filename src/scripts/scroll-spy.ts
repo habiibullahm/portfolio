@@ -1,7 +1,15 @@
-/** Section ids observed for scroll-spy. Focus maps to Home in the nav. */
-const sections = ["home", "focus", "work", "about", "experience", "contact"] as const;
+/** Section ids observed for scroll-spy. Focus maps to Home (Focus stays off nav). */
+const sections = [
+  "home",
+  "contributions",
+  "focus",
+  "projects",
+  "experience",
+  "contact",
+] as const;
 
 function navIdForSection(sectionId: string): string {
+  // Focus is not a nav item; highlight Home while Focus is in view.
   return sectionId === "focus" ? "home" : sectionId;
 }
 

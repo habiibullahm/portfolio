@@ -1,40 +1,34 @@
 export const site = {
   name: "Muhammad Habiibullah",
-  chips: ["FULL-STACK", "JAVA", "TYPESCRIPT"] as const,
-  eyebrow: "FULL-STACK SOFTWARE DEVELOPER · JAKARTA",
-  statement: "I build production web and mobile systems that teams can",
-  statementEmphasis: "ship with confidence",
+  chips: ["JAVA", "TYPESCRIPT", "REACT"] as const,
+  eyebrow: "FULL-STACK DEVELOPER · JAKARTA",
+  statement: "I design, build, and deploy web applications that teams can",
+  statementEmphasis: "ship end to end",
   summary:
-    "Full-Stack Developer with 2+ years building enterprise web and mobile systems — Java/Spring Boot, React, React Native, TypeScript. Secure REST APIs, PostgreSQL, and CI/CD delivery. Daily Cursor/MCP user who still owns the engineering decisions.",
-  about:
-    "I build and maintain backend services and product UIs used by internal teams and field users. I care about clear auth, solid data models, and delivery that survives production — from Spring Boot APIs to React and React Native clients.",
-  skills: [
-    "Java / Spring Boot",
-    "TypeScript / React",
-    "React Native",
-    "PostgreSQL / PostGIS",
-    "Redis · Kafka · RabbitMQ",
-    "Docker · CI/CD",
-    "JWT / RBAC · Azure AD",
-    "OWASP-minded APIs",
-  ],
+    "From idea to deploy—web apps with solid backends, clear UIs, and room to grow.",
   email: "mr.habiibullahm@gmail.com",
   socials: {
     github: "https://github.com/habiibullahm",
     linkedin: "https://www.linkedin.com/in/muhammad-habibullah/",
-    linktree: "https://linktr.ee/habibullahm",
   },
   seo: {
     title: "Muhammad Habiibullah · Full-Stack Software Developer",
     description:
-      "Full-Stack Software Developer in Jakarta — Java/Spring Boot, React, TypeScript. Secure APIs, product UIs, and production delivery.",
+      "Muhammad Habiibullah — full-stack developer in Jakarta. Helps teams build and launch reliable web products.",
   },
+  contactBlurb:
+    "Currently Full-Stack Developer at PT. Dans Multi Pro. Open to new opportunities — email or LinkedIn.",
 } as const;
 
 export const nav = [
   { id: "home", label: "Home", short: "Home", href: "#home" },
-  { id: "work", label: "Work", short: "Work", href: "#work" },
-  { id: "about", label: "About", short: "About", href: "#about" },
+  {
+    id: "contributions",
+    label: "Contributions",
+    short: "OSS",
+    href: "#contributions",
+  },
+  { id: "projects", label: "Projects", short: "Proj.", href: "#projects" },
   { id: "experience", label: "Experience", short: "Exp.", href: "#experience" },
   { id: "contact", label: "Contact", short: "Contact", href: "#contact" },
 ] as const;
@@ -42,19 +36,33 @@ export const nav = [
 export const focusAreas = [
   {
     title: "Secure REST APIs",
-    blurb: "Java/Spring Boot, JWT/RBAC, PostgreSQL — APIs that stay trustworthy in production.",
+    blurb:
+      "Build Spring Boot APIs with clear endpoints, JWT/RBAC auth, and production-minded access control.",
   },
   {
-    title: "Full-stack delivery",
-    blurb: "React + TypeScript admin portals and React Native workflows wired to real services.",
+    title: "Full-Stack Delivery",
+    blurb:
+      "Ship web products end to end—admin portals and apps wired to real backend services.",
   },
   {
-    title: "Platform & async",
-    blurb: "Redis, Kafka/RabbitMQ, Docker, and CI/CD for scalable, releasable systems.",
+    title: "Platform & Performance",
+    blurb:
+      "Support releases with Redis, Docker, and CI/CD so shipping stays repeatable.",
   },
   {
-    title: "Production reliability",
-    blurb: "Query optimization, tests, and OWASP-aligned API habits that reduce surprise.",
+    title: "Production Reliability",
+    blurb:
+      "Keep systems steady after deploy—query tuning, automated tests, and careful API habits.",
+  },
+] as const;
+
+export const contributions = [
+  {
+    title: "Freshdesk Ticket Summary Actions",
+    org: "PipedreamHQ (OSS)",
+    outcome:
+      "Merged PR #20969 — Freshdesk Ticket Summary actions on Pipedream (11k+ ★ open-source repo).",
+    href: "https://github.com/PipedreamHQ/pipedream/pull/20969",
   },
 ] as const;
 
@@ -63,13 +71,7 @@ export const experience = [
     role: "Full-Stack Developer",
     company: "PT. Dans Multi Pro — Jakarta",
     years: "Apr 2024 – Present",
-    win: "Backend services + secure REST (Spring Boot, JWT/RBAC, PostGIS); React/RN clients; Azure AD, Kafka, Redis, S3.",
-  },
-  {
-    role: "Open Source Contributor",
-    company: "PipedreamHQ",
-    years: "2026",
-    win: "Merged Freshdesk Ticket Summary actions (PR #20969) on an 11k+ ★ platform.",
+    win: "Secure Spring Boot APIs (JWT/RBAC, PostgreSQL) and React / React Native partner apps for telecom clients — including AI chat actions for core business flows.",
   },
 ] as const;
 

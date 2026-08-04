@@ -1,6 +1,6 @@
 # Muhammad Habiibullah — Personal Portfolio
 
-Astro + Tailwind + Local MDX. Sticky nav, scroll-spy, Email/LinkedIn contact (no public CV).
+Astro + Tailwind + Local MDX. Sticky nav, scroll-spy, Email/LinkedIn contact.
 
 ## Develop
 
@@ -21,7 +21,11 @@ npm run preview
 
 Push this folder as GitHub repo `habiibullahm/portfolio` → Vercel (Astro preset, output `dist`).
 
+## Featured
+
+See [docs/FEATURED.md](docs/FEATURED.md) — Task Management (portfolio app) + Pipedream OSS PR.
+
 ## Content
 
-- Chrome / experience: `src/data/site.ts`
+- Chrome / experience / contributions: `src/data/site.ts`
 - Projects: `src/content/projects/*.mdx`
