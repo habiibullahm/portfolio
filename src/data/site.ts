@@ -1,6 +1,6 @@
 export const site = {
   name: "Muhammad Habiibullah",
-  chips: ["JAVA", "TYPESCRIPT", "REACT"] as const,
+  initials: "MH",
   eyebrow: "FULL-STACK DEVELOPER · JAKARTA",
   statement: "I design, build, and deploy web applications that teams can",
   statementEmphasis: "ship end to end",
@@ -25,7 +25,7 @@ export const site = {
       "Muhammad Habiibullah — full-stack developer in Jakarta. Helps teams build and launch reliable web products.",
   },
   contactBlurb:
-    "Currently Full-Stack Developer at PT. Dans Multi Pro. Open to new opportunities — email or LinkedIn.",
+    "Currently Full-Stack Developer at PT. Dans Multi Pro. Open to new opportunities — email.",
 } as const;
 
 export const nav = [

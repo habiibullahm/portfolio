@@ -1,0 +1,68 @@
+<button
+  type="button"
+  id="scroll-top"
+  class="pointer-events-none fixed bottom-6 right-4 z-30 inline-flex size-11 translate-y-2 items-center justify-center rounded-md border border-ink/15 bg-mist text-ink opacity-0 shadow-sm transition duration-200 hover:border-accent hover:text-accent focus-visible:opacity-100 md:right-6"
+  aria-label="Back to top"
+  aria-hidden="true"
+  tabindex="-1"
+>
+  <svg
+    class="size-5"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="2"
+    aria-hidden="true"
+  >
+    <path
+      d="M12 19V5M5 12l7-7 7 7"
+      stroke-linecap="round"
+      stroke-linejoin="round"></path>
+  </svg>
+</button>
+
+<script>
+  const button = document.getElementById("scroll-top");
+  if (button) {
+    const threshold = 400;
+    const footerHidePx = 160;
+    let menuOpen = false;
+
+    const prefersReducedMotion = () =>
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const nearFooter = () => {
+      const doc = document.documentElement;
+      const remaining =
+        doc.scrollHeight - (window.scrollY + window.innerHeight);
+      return remaining < footerHidePx;
+    };
+
+    const syncVisibility = () => {
+      const show = window.scrollY > threshold && !menuOpen && !nearFooter();
+      button.classList.toggle("pointer-events-none", !show);
+      button.classList.toggle("opacity-0", !show);
+      button.classList.toggle("translate-y-2", !show);
+      button.classList.toggle("opacity-100", show);
+      button.classList.toggle("translate-y-0", show);
+      button.setAttribute("aria-hidden", show ? "false" : "true");
+      button.tabIndex = show ? 0 : -1;
+    };
+
+    window.addEventListener("scroll", syncVisibility, { passive: true });
+    window.addEventListener("resize", syncVisibility, { passive: true });
+    document.addEventListener("nav-menu-toggle", (event) => {
+      menuOpen = Boolean(event.detail?.open);
+      syncVisibility();
+    });
+
+    button.addEventListener("click", () => {
+      window.scrollTo({
+        top: 0,
+        behavior: prefersReducedMotion() ? "auto" : "smooth",
+      });
+    });
+
+    syncVisibility();
+  }
+</script>

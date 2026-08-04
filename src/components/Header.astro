@@ -1,43 +1,142 @@
 ---
-import { nav, site } from "../data/site";
+import { nav, safeExternalUrl, site } from "../data/site";
+
+const mailto = safeExternalUrl(`mailto:${site.email}`);
 ---
 
 <header
+  id="site-header"
   class="sticky top-0 z-40 border-b border-line bg-mist/95 backdrop-blur-sm"
 >
   <div
-    class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 md:px-6"
+    class="relative mx-auto flex min-h-14 max-w-6xl items-center justify-between gap-4 px-4 py-3 md:px-6"
   >
-    <a href="#home" class="min-w-0 shrink-0 no-underline">
-      <span class="block font-display text-sm font-semibold text-ink md:text-base">
-        {site.name}
-      </span>
-      <span class="mt-0.5 hidden font-mono text-[10px] tracking-widest text-muted sm:block">
-        {site.chips.join(" · ")}
-      </span>
-    </a>
+    <div class="flex min-w-0 items-center">
+      <a
+        href="#home"
+        class="font-display text-sm font-semibold text-ink no-underline md:hidden"
+        aria-label={`${site.name} — home`}
+      >
+        {site.initials}
+      </a>
 
-    <nav aria-label="Primary" class="min-w-0 flex-1 overflow-x-auto">
-      <ul class="flex flex-nowrap justify-end gap-1">
-        {
-          nav.map((item) => (
-            <li class="shrink-0">
-              <a
-                href={item.href}
-                data-nav-link={item.id}
-                {...(item.id === "home" ? { "aria-current": "true" } : {})}
-                class:list={[
-                  "inline-block rounded-md px-2.5 py-2 font-display text-xs font-medium no-underline transition-colors md:px-3 md:text-sm",
-                  item.id === "home" ? "bg-accent text-white" : "text-muted hover:text-ink",
-                ]}
-              >
-                <span class="md:hidden">{item.short}</span>
-                <span class="hidden md:inline">{item.label}</span>
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-    </nav>
+      <nav
+        id="primary-nav"
+        aria-label="Primary"
+        class="absolute inset-x-0 top-full z-40 hidden border-b border-line bg-mist md:static md:inset-auto md:flex md:border-0 md:bg-transparent"
+      >
+        <ul
+          class="mx-auto flex w-full max-w-6xl flex-col gap-1 px-4 py-3 md:mx-0 md:w-auto md:flex-row md:flex-nowrap md:gap-1 md:px-0 md:py-0"
+        >
+          {
+            nav.map((item) => (
+              <li class="w-full md:w-auto md:shrink-0">
+                <a
+                  href={item.href}
+                  data-nav-link={item.id}
+                  {...(item.id === "home" ? { "aria-current": "true" } : {})}
+                  class:list={[
+                    "block rounded-md px-3 py-3 text-center font-display text-sm font-medium no-underline transition-colors md:inline-block md:px-3 md:py-2",
+                    item.id === "home"
+                      ? "bg-accent text-white"
+                      : "text-muted hover:text-ink",
+                  ]}
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </div>
+
+    <div class="flex shrink-0 items-center gap-2">
+      {
+        mailto && (
+          <a
+            href={mailto}
+            class="inline-flex shrink-0 items-center rounded-md border border-ink/15 px-3 py-2 font-display text-xs font-medium text-ink no-underline transition hover:border-accent hover:text-accent"
+          >
+            Say hello
+          </a>
+        )
+      }
+      <button
+        type="button"
+        id="nav-toggle"
+        class="inline-flex size-11 shrink-0 items-center justify-center rounded-md border border-ink/15 text-ink md:hidden"
+        aria-controls="primary-nav"
+        aria-expanded="false"
+        aria-label="Open menu"
+      >
+        <svg
+          id="nav-icon-open"
+          class="size-5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          aria-hidden="true"
+        >
+          <path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round"></path>
+        </svg>
+        <svg
+          id="nav-icon-close"
+          class="hidden size-5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          aria-hidden="true"
+        >
+          <path d="M6 6l12 12M18 6L6 18" stroke-linecap="round"></path>
+        </svg>
+      </button>
+    </div>
   </div>
 </header>
+
+<script>
+  const toggle = document.getElementById("nav-toggle");
+  const nav = document.getElementById("primary-nav");
+  const iconOpen = document.getElementById("nav-icon-open");
+  const iconClose = document.getElementById("nav-icon-close");
+
+  if (toggle && nav && iconOpen && iconClose) {
+    const setOpen = (open) => {
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+      nav.classList.toggle("hidden", !open);
+      iconOpen.classList.toggle("hidden", open);
+      iconClose.classList.toggle("hidden", !open);
+      document.dispatchEvent(
+        new CustomEvent("nav-menu-toggle", { detail: { open } }),
+      );
+    };
+
+    toggle.addEventListener("click", () => {
+      setOpen(toggle.getAttribute("aria-expanded") !== "true");
+    });
+
+    nav.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => setOpen(false));
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") setOpen(false);
+    });
+
+    const mq = window.matchMedia("(min-width: 768px)");
+    const syncDesktop = () => {
+      if (mq.matches) {
+        setOpen(false);
+        nav.classList.remove("hidden");
+      } else if (toggle.getAttribute("aria-expanded") !== "true") {
+        nav.classList.add("hidden");
+      }
+    };
+    mq.addEventListener("change", syncDesktop);
+    syncDesktop();
+  }
+</script>

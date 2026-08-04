@@ -2,8 +2,6 @@
 import { safeExternalUrl, site } from "../../data/site";
 
 const mailto = safeExternalUrl(`mailto:${site.email}`);
-const github = safeExternalUrl(site.socials.github);
-const linkedin = safeExternalUrl(site.socials.linkedin);
 ---
 
 <section id="contact" data-section class="section-anchor">
@@ -19,30 +17,6 @@ const linkedin = safeExternalUrl(site.socials.linkedin);
             class="inline-flex items-center rounded-md bg-ink px-5 py-3 font-display text-sm font-medium text-white no-underline transition hover:bg-ink/90"
           >
             {site.email}
-          </a>
-        )
-      }
-      {
-        linkedin && (
-          <a
-            href={linkedin}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center rounded-md border border-ink/20 bg-transparent px-5 py-3 font-display text-sm font-medium text-ink no-underline transition hover:border-accent hover:text-accent"
-          >
-            LinkedIn
-          </a>
-        )
-      }
-      {
-        github && (
-          <a
-            href={github}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center rounded-md border border-ink/20 bg-transparent px-5 py-3 font-display text-sm font-medium text-ink no-underline transition hover:border-accent hover:text-accent"
-          >
-            GitHub
           </a>
         )
       }
