@@ -5,13 +5,16 @@ const mailto = safeExternalUrl(`mailto:${site.email}`);
 ---
 
 <section id="home" data-section class="section-anchor border-b border-line">
-  <div class="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-24">
+  <div class="mx-auto max-w-6xl px-4 pb-16 pt-6 md:px-6 md:pb-24 md:pt-8">
     <p class="font-mono text-xs tracking-widest text-muted">{site.eyebrow}</p>
-    <h1 class="mt-4 text-3xl leading-tight text-ink md:text-5xl">
+    <h1 class="mt-4 font-display text-4xl font-semibold leading-tight text-ink md:text-6xl">
+      {site.name}
+    </h1>
+    <p class="mt-5 text-xl leading-snug text-ink md:mt-6 md:text-3xl">
       {site.statement}
       {" "}
       <em class="not-italic text-accent">{site.statementEmphasis}.</em>
-    </h1>
+    </p>
     <p class="mt-5 max-w-2xl text-base text-muted md:text-lg">{site.summary}</p>
     <div class="mt-8 flex flex-wrap gap-3">
       <a

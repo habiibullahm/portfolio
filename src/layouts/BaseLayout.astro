@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import ScrollTop from "../components/ScrollTop.astro";
 import { site } from "../data/site";
 
 interface Props {
@@ -34,6 +35,7 @@ const { title = site.seo.title, description = site.seo.description } = Astro.pro
       Skip to content
     </a>
     <slot />
+    <ScrollTop />
     <script>
       import "../scripts/scroll-spy.ts";
     </script>
