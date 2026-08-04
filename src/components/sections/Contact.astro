@@ -10,9 +10,7 @@ const linkedin = safeExternalUrl(site.socials.linkedin);
   <div class="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-20">
     <p class="font-mono text-xs tracking-widest text-muted">CONTACT</p>
     <h2 class="mt-2 text-2xl md:text-3xl">Want to ship something together?</h2>
-    <p class="mt-4 max-w-xl text-muted">
-      Reach out by email or LinkedIn — no public CV download, keep it simple.
-    </p>
+    <p class="mt-4 max-w-xl text-muted">{site.contactBlurb}</p>
     <div class="mt-8 flex flex-wrap gap-4">
       {
         mailto && (

@@ -1,5 +1,12 @@
 /** Section ids observed for scroll-spy. Focus maps to Home in the nav. */
-const sections = ["home", "focus", "work", "about", "experience", "contact"] as const;
+const sections = [
+  "home",
+  "contributions",
+  "focus",
+  "projects",
+  "experience",
+  "contact",
+] as const;
 
 function navIdForSection(sectionId: string): string {
   return sectionId === "focus" ? "home" : sectionId;

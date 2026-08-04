@@ -4,7 +4,6 @@ import { safeExternalUrl, site } from "../data/site";
 const year = new Date().getFullYear();
 const github = safeExternalUrl(site.socials.github);
 const linkedin = safeExternalUrl(site.socials.linkedin);
-const linktree = safeExternalUrl(site.socials.linktree);
 ---
 
 <footer class="bg-ink text-mist">
@@ -37,18 +36,6 @@ const linktree = safeExternalUrl(site.socials.linktree);
             class="text-mist/80 no-underline hover:text-mist"
           >
             LinkedIn
-          </a>
-        )
-      }
-      {
-        linktree && (
-          <a
-            href={linktree}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="text-mist/80 no-underline hover:text-mist"
-          >
-            Linktree
           </a>
         )
       }
