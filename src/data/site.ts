@@ -6,6 +6,14 @@ export const site = {
   statementEmphasis: "ship end to end",
   summary:
     "From idea to deploy—web apps with solid backends, clear UIs, and room to grow.",
+  about: {
+    lead: "Building the bridge between business strategy and production code.",
+    paragraphs: [
+      "I'm Habib—a Jakarta-based full-stack developer who took a slightly unconventional path into software engineering. While earning my Business Management degree at the University of Informatics and Business Indonesia (GPA 3.61), I realized I wanted to be the person actually building the products. That business background stuck with me, shaping how I approach tech today: I don't just ask how to build a feature, but why it matters to the user and the business.",
+      "Currently at PT. Dans Multi Pro, I build end-to-end enterprise solutions for telecommunications clients. Day-to-day, that means engineering Java/Spring Boot microservices, tuning PostgreSQL queries, and crafting web and mobile interfaces with React and React Native. On the side, I occasionally tinker with open-source integrations on Pipedream to stay sharp with new tooling.",
+      "Whether I'm hardening API security, integrating AI workflows, or optimizing database performance, my goal remains straightforward: shipping clean, reliable software that solves real operational problems.",
+    ],
+  },
   email: "mr.habiibullahm@gmail.com",
   socials: {
     github: "https://github.com/habiibullahm",
@@ -29,6 +37,7 @@ export const nav = [
     href: "#contributions",
   },
   { id: "projects", label: "Projects", short: "Proj.", href: "#projects" },
+  { id: "about", label: "About", short: "About", href: "#about" },
   { id: "experience", label: "Experience", short: "Exp.", href: "#experience" },
   { id: "contact", label: "Contact", short: "Contact", href: "#contact" },
 ] as const;
@@ -66,11 +75,32 @@ export const contributions = [
   },
 ] as const;
 
+export const education = [
+  {
+    label: "Bootcamp",
+    title: "Full-stack software development",
+    org: "Glints Academy",
+  },
+  {
+    label: "Bachelor",
+    title: "Business Management · GPA 3.61",
+    org: "University of Informatics and Business Indonesia",
+  },
+] as const;
+
 export const experience = [
   {
     role: "Full-Stack Developer",
     company: "PT. Dans Multi Pro — Jakarta",
     years: "Apr 2024 – Present",
+    stack: [
+      "Java",
+      "Spring Boot",
+      "PostgreSQL",
+      "JWT/RBAC",
+      "React",
+      "React Native",
+    ],
     win: "Secure Spring Boot APIs (JWT/RBAC, PostgreSQL) and React / React Native partner apps for telecom clients — including AI chat actions for core business flows.",
   },
 ] as const;

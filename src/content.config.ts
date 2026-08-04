@@ -10,6 +10,8 @@ const projects = defineCollection({
     client: z.string(),
     domain: z.string(),
     order: z.number(),
+    stack: z.array(z.string()).min(1),
+    highlights: z.array(z.string()).min(1).max(5).optional(),
     /** Site-relative only (OWASP: no remote/scriptable image URLs). */
     image: z
       .string()

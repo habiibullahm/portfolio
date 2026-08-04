@@ -4,6 +4,7 @@ const sections = [
   "contributions",
   "focus",
   "projects",
+  "about",
   "experience",
   "contact",
 ] as const;
