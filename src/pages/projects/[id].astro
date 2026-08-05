@@ -1,0 +1,148 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { safeExternalUrl, safeSitePath, site } from "../../data/site";
+
+export async function getStaticPaths() {
+  const projects = await getCollection("projects", ({ data }) => !data.draft);
+  return projects.map((project) => ({
+    params: { id: project.id },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { data } = project;
+
+const live = data.links?.live ? safeExternalUrl(data.links.live) : null;
+const repo = data.links?.repo ? safeExternalUrl(data.links.repo) : null;
+const imageSrc = safeSitePath(data.image);
+const previews = (data.previews ?? [])
+  .map((item) => {
+    const src = safeSitePath(item.src);
+    return src ? { src, alt: item.alt } : null;
+  })
+  .filter((item): item is { src: string; alt: string } => item !== null);
+
+const sectionLabel =
+  data.section === "tool-helper" ? "Tool Helper" : "Featured";
+const isPhonePreview = data.section === "tool-helper";
+const previewImgClass = isPhonePreview
+  ? "mx-auto h-auto w-full max-w-[16rem] rounded-md border border-line sm:mx-0 sm:max-w-[18rem]"
+  : "h-auto w-full max-w-3xl rounded-md border border-line";
+const previewListClass = isPhonePreview
+  ? "mt-6 grid gap-6 sm:grid-cols-2 sm:gap-8"
+  : "mt-6 space-y-6";
+
+const pageTitle = `${data.title} · ${site.name}`;
+---
+
+<BaseLayout title={pageTitle} description={data.outcome}>
+  <header class="border-b border-line bg-mist">
+    <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 md:px-6">
+      <a href="/" class="font-display text-sm font-semibold text-ink no-underline">
+        {site.name}
+      </a>
+      <a
+        href="/#projects"
+        class="font-display text-sm text-muted no-underline hover:text-ink"
+      >
+        ← Projects
+      </a>
+    </div>
+  </header>
+
+  <main id="main" class="mx-auto max-w-6xl px-4 py-12 md:px-6 md:py-16">
+    <div class="flex flex-col gap-6 sm:flex-row sm:items-start">
+      {
+        imageSrc && (
+          <div class="size-28 shrink-0 overflow-hidden rounded-md border border-line bg-mist sm:size-32">
+            <img
+              src={imageSrc}
+              alt={data.imageAlt}
+              width="128"
+              height="128"
+              class="size-full object-cover"
+            />
+          </div>
+        )
+      }
+      <div class="min-w-0">
+        <p class="font-mono text-xs tracking-wide text-muted">
+          {sectionLabel} · {data.domain}
+        </p>
+        <h1 class="mt-2 text-3xl md:text-4xl">{data.title}</h1>
+        <p class="mt-2 font-mono text-xs tracking-wide text-muted">
+          {data.stack.join(" · ")}
+        </p>
+        <p class="mt-4 max-w-2xl text-muted">{data.outcome}</p>
+        <div class="mt-4 flex flex-wrap gap-4 font-display text-sm">
+          {
+            live && (
+              <a
+                href={live}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-accent no-underline hover:underline"
+              >
+                Live
+              </a>
+            )
+          }
+          {
+            repo && (
+              <a
+                href={repo}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-accent no-underline hover:underline"
+              >
+                Code
+              </a>
+            )
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-14 border-t border-line pt-12">
+      <p class="font-mono text-xs tracking-widest text-muted">ABOUT</p>
+      <div class="mt-8 space-y-10">
+        <section>
+          <h2 class="font-display text-xl">What it is</h2>
+          <p class="mt-3 max-w-3xl leading-relaxed text-muted">{data.what}</p>
+        </section>
+        <section>
+          <h2 class="font-display text-xl">Why it exists</h2>
+          <p class="mt-3 max-w-3xl leading-relaxed text-muted">{data.why}</p>
+        </section>
+        <section>
+          <h2 class="font-display text-xl">How it works</h2>
+          <p class="mt-3 max-w-3xl leading-relaxed text-muted">{data.how}</p>
+        </section>
+      </div>
+    </div>
+
+    {
+      previews.length > 0 && (
+        <section class="mt-14 border-t border-line pt-12">
+          <p class="font-mono text-xs tracking-widest text-muted">PREVIEW</p>
+          <h2 class="mt-2 font-display text-xl">Product UI</h2>
+          <ul class={previewListClass}>
+            {previews.map((item) => (
+              <li>
+                <img
+                  src={item.src}
+                  alt={item.alt}
+                  class={previewImgClass}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
+  </main>
+</BaseLayout>

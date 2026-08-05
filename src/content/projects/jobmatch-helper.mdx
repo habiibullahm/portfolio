@@ -1,0 +1,36 @@
+---
+title: "JobMatch Helper"
+outcome: "Telegram bot that matches a CV to Indonesia and Adzuna jobs with scores, gaps, and alerts."
+client: "Personal / Portfolio"
+domain: "Job Search"
+order: 2
+section: "tool-helper"
+stack:
+  - "TypeScript"
+  - "grammY"
+  - "SQLite"
+  - "pdf-parse"
+  - "Adzuna"
+  - "Railway"
+highlights:
+  - "Top-5 ranked matches from a CV PDF"
+  - "Keyword and title search across local catalog"
+  - "Strong-match pushes and daily digest alerts"
+image: "/images/projects/jobmatch-helper.png"
+imageAlt: "JobMatch Helper bot logo"
+what: "A Telegram bot for jobseekers. Upload a CV PDF (or search by keywords) and get Top 5 roles from an Indonesia catalog plus Adzuna, each with a match score and skill gaps. Optional alerts push strong matches and a daily digest."
+why: "Job search is noisy, and people already chat in Telegram. Match, search, and alerts in one bot beats another web app — and the CV never sits on disk: text is extracted in memory, and only skill keywords are kept for return visits."
+how: "grammY bot in TypeScript with SQLite for profiles, pdf-parse for in-memory extraction, and Adzuna plus a local JSON catalog for listings. Commands cover match, search, alerts, and profile. Railway long polling, with PDF checks, buffer wipe, and parameterized SQL."
+previews:
+  - src: "/images/projects/jobmatch-helper-preview.png"
+    alt: "JobMatch Helper Telegram chat showing ranked job matches with scores and skill gaps"
+  - src: "/images/projects/jobmatch-helper-alerts-preview.png"
+    alt: "JobMatch Helper search results and alerts controls in Telegram"
+draft: false
+links:
+  live: "https://t.me/jobmatch_tools_bot"
+  repo: "https://github.com/habiibullahm/jobmatch-helper"
+---
+
+Privacy-minded Telegram bot for jobseekers: CV to ranked Indonesia and Adzuna roles,
+with scores, skill gaps, and optional alert digests.

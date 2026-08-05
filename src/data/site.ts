@@ -2,10 +2,10 @@ export const site = {
   name: "Muhammad Habiibullah",
   initials: "MH",
   eyebrow: "FULL-STACK DEVELOPER · JAKARTA",
-  statement: "I design, build, and deploy web applications that teams can",
-  statementEmphasis: "ship end to end",
+  statement: "I design, build, and deploy end-to-end web applications that",
+  statementEmphasis: "ship fast",
   summary:
-    "From idea to deploy—web apps with solid backends, clear UIs, and room to grow.",
+    "Leveraging modern AI workflows to accelerate development, elevate code quality, and build scalable systems.",
   about: {
     lead: "Building the bridge between business strategy and production code.",
     paragraphs: [
@@ -111,4 +111,12 @@ export function safeExternalUrl(url: string): string | null {
   } catch {
     return null;
   }
+}
+
+/** Site-relative asset paths only (blocks protocol-relative //… URLs). */
+export function safeSitePath(path: string): string | null {
+  if (path.startsWith("/") && !path.startsWith("//")) {
+    return path;
+  }
+  return null;
 }
