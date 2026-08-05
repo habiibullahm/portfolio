@@ -35,6 +35,13 @@ const {
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
+    <script is:inline>
+      (function () {
+        if (!location.hash || location.hash === "#") return;
+        if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+        document.documentElement.classList.add("await-hash");
+      })();
+    </script>
   </head>
   <body>
     <a
@@ -45,6 +52,9 @@ const {
     </a>
     <slot />
     <ScrollTop />
+    <script>
+      import "../scripts/hash-scroll.ts";
+    </script>
     {
       enableScrollSpy && (
         <script>

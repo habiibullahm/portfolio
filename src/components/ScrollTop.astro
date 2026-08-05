@@ -52,11 +52,14 @@
     window.addEventListener("scroll", syncVisibility, { passive: true });
     window.addEventListener("resize", syncVisibility, { passive: true });
     document.addEventListener("nav-menu-toggle", (event) => {
-      menuOpen = Boolean(event.detail?.open);
+      menuOpen = Boolean(
+        (event as CustomEvent<{ open?: boolean }>).detail?.open,
+      );
       syncVisibility();
     });
 
     button.addEventListener("click", () => {
+      document.dispatchEvent(new CustomEvent("scroll-to-top"));
       window.scrollTo({
         top: 0,
         behavior: prefersReducedMotion() ? "auto" : "smooth",

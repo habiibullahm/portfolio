@@ -51,6 +51,11 @@
     scroll-margin-top: 5.5rem;
   }
 
+  /* Avoid flashing Home when landing on /#projects from a detail page. */
+  html.await-hash:not(.hash-ready) body {
+    visibility: hidden;
+  }
+
   @keyframes hero-rise {
     from {
       opacity: 0;
@@ -81,6 +86,8 @@
   @media (prefers-reduced-motion: reduce) {
     .hero-animate {
       animation: none;
+      opacity: 1;
+      transform: none;
     }
   }
 }

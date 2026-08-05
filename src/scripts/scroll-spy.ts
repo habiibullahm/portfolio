@@ -1,21 +1,17 @@
-/** Section ids observed for scroll-spy. Focus maps to Home (Focus stays off nav). */
+/** Section ids observed for scroll-spy (aligned with primary nav). */
 const sections = [
   "home",
   "contributions",
-  "focus",
   "projects",
   "about",
   "experience",
   "contact",
 ] as const;
 
-function navIdForSection(sectionId: string): string {
-  // Focus is not a nav item; highlight Home while Focus is in view.
-  return sectionId === "focus" ? "home" : sectionId;
-}
+type SectionId = (typeof sections)[number];
 
 function setActive(sectionId: string) {
-  const activeNav = navIdForSection(sectionId);
+  const activeNav = sectionId;
   document.querySelectorAll<HTMLAnchorElement>("[data-nav-link]").forEach((link) => {
     const match = link.dataset.navLink === activeNav;
     if (match) {
@@ -30,8 +26,23 @@ function setActive(sectionId: string) {
   });
 }
 
+function hashSection(): SectionId | null {
+  const id = decodeURIComponent(window.location.hash.replace(/^#/, ""));
+  return (sections as readonly string[]).includes(id) ? (id as SectionId) : null;
+}
+
+/** While settling on a deep link, ignore IO so Home does not steal the highlight. */
+let hashLockUntil = 0;
+
+const initialHash = hashSection();
+if (initialHash) {
+  setActive(initialHash);
+  hashLockUntil = Date.now() + 400;
+}
+
 const observer = new IntersectionObserver(
   (entries) => {
+    if (Date.now() < hashLockUntil) return;
     const visible = entries
       .filter((e) => e.isIntersecting)
       .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
