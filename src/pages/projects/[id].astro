@@ -164,17 +164,17 @@ const pageTitle = `${data.title} · ${site.name}`;
 
   <dialog
     id="preview-lightbox"
-    class="preview-lightbox m-0 border-0 bg-ink p-0"
+    class="preview-lightbox m-0 border-0 bg-transparent p-0"
     aria-label="Preview image"
   >
     <div
       id="preview-lightbox-stage"
-      class="relative flex h-full w-full items-center justify-center"
+      class="relative flex max-h-[85vh] max-w-[min(92vw,1100px)] items-start justify-center"
     >
-      <form method="dialog" class="absolute right-3 top-3 z-10 sm:right-5 sm:top-5">
+      <form method="dialog" class="absolute -right-1 -top-1 z-10 sm:-right-2 sm:-top-2">
         <button
           type="submit"
-          class="flex size-9 items-center justify-center rounded-md border border-mist/25 bg-ink/70 text-mist backdrop-blur-sm hover:bg-ink/90"
+          class="flex size-9 items-center justify-center rounded-md border border-mist/30 bg-ink/60 text-mist backdrop-blur-sm hover:bg-ink/80"
           aria-label="Close"
         >
           <svg
@@ -195,7 +195,7 @@ const pageTitle = `${data.title} · ${site.name}`;
         id="preview-lightbox-img"
         src=""
         alt=""
-        class="h-full w-full object-contain"
+        class="max-h-[85vh] w-auto max-w-full rounded-md object-contain"
       />
     </div>
   </dialog>
@@ -209,21 +209,17 @@ const pageTitle = `${data.title} · ${site.name}`;
       height: 100dvh;
       max-height: none;
       margin: 0;
-      padding: 0.5rem;
-      background: rgb(24 38 56);
+      padding: 1.5rem;
+      background: transparent;
+    }
+
+    #preview-lightbox[open] {
+      display: grid;
+      place-items: center;
     }
 
     #preview-lightbox::backdrop {
-      background: rgb(24 38 56 / 0.96);
-    }
-
-    #preview-lightbox:fullscreen {
-      width: 100%;
-      height: 100%;
-      max-width: none;
-      max-height: none;
-      padding: 0.75rem;
-      background: rgb(24 38 56);
+      background: rgb(24 38 56 / 0.45);
     }
   </style>
 
@@ -231,12 +227,6 @@ const pageTitle = `${data.title} · ${site.name}`;
     const dialog = document.getElementById("preview-lightbox");
     const img = document.getElementById("preview-lightbox-img");
     if (dialog instanceof HTMLDialogElement && img instanceof HTMLImageElement) {
-      const exitFs = () => {
-        if (document.fullscreenElement) {
-          void document.exitFullscreen().catch(() => {});
-        }
-      };
-
       document.querySelectorAll("[data-preview-open]").forEach((btn) => {
         if (!(btn instanceof HTMLButtonElement)) return;
         btn.addEventListener("click", () => {
@@ -246,28 +236,16 @@ const pageTitle = `${data.title} · ${site.name}`;
           img.src = src;
           img.alt = alt;
           dialog.showModal();
-          if (dialog.requestFullscreen) {
-            void dialog.requestFullscreen().catch(() => {});
-          }
         });
       });
 
-      const stage = document.getElementById("preview-lightbox-stage");
       dialog.addEventListener("click", (event) => {
-        if (event.target === dialog || event.target === stage) dialog.close();
+        if (event.target === dialog) dialog.close();
       });
 
       dialog.addEventListener("close", () => {
-        exitFs();
         img.removeAttribute("src");
         img.alt = "";
-      });
-
-      document.addEventListener("fullscreenchange", () => {
-        if (!document.fullscreenElement && dialog.open) {
-          // Leaving browser fullscreen (Esc) should also dismiss the lightbox.
-          dialog.close();
-        }
       });
     }
   </script>
