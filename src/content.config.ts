@@ -17,7 +17,6 @@ const projects = defineCollection({
     /** featured = main Projects list; tool-helper = Tool Helper subsection */
     section: z.enum(["featured", "tool-helper"]).default("featured"),
     stack: z.array(z.string()).min(1),
-    highlights: z.array(z.string()).min(1).max(5).optional(),
     /** Site-relative only (OWASP: no remote/scriptable image URLs). */
     image: rootRelativePath,
     imageAlt: z.string(),
