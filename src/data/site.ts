@@ -77,11 +77,6 @@ export const contributions = [
 
 export const education = [
   {
-    label: "Bootcamp",
-    title: "Full-stack software development",
-    org: "Glints Academy",
-  },
-  {
     label: "Bachelor",
     title: "Business Management · GPA 3.61",
     org: "University of Informatics and Business Indonesia",
