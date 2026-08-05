@@ -1,0 +1,35 @@
+---
+title: "CV Screener"
+outcome: "Telegram bot that screens PDF CVs against a job description and ranks candidates in-session."
+client: "Personal / Portfolio"
+domain: "Hiring Tools"
+order: 1
+section: "tool-helper"
+stack:
+  - "TypeScript"
+  - "grammY"
+  - "pdf-parse"
+  - "Node"
+  - "Railway"
+highlights:
+  - "JD paste or career-page URL"
+  - "Match % with matched and missing keywords"
+  - "Sticky JD multi-CV ranking in-session"
+image: "/images/projects/cv-screener.png"
+imageAlt: "CV Screener bot logo"
+what: "A Telegram bot for hiring managers. Paste a job description or share a public career-page link, upload candidate PDFs, and get a match score with matched and missing keywords. Keep one JD sticky in the session to screen and rank more CVs without starting over."
+why: "First-pass screening is slow when done by eye. Keyword matching is fast and explainable, without sending CVs to an AI API. Recruiters already work in Telegram — the bot meets them there."
+how: "TypeScript and grammY on Node, long-polling on Railway. pdf-parse reads text in memory; overlap scoring returns bands plus matched/missing lists. Sessions hold one JD, rank up to ten CVs, and wipe buffers after use. Career URLs are fetched with SSRF-safe checks."
+previews:
+  - src: "/images/projects/cv-screener-preview.png"
+    alt: "CV Screener Telegram chat showing match score with matched and missing keywords"
+  - src: "/images/projects/cv-screener-ranking-preview.png"
+    alt: "CV Screener in-session ranking of multiple candidate CVs"
+draft: false
+links:
+  live: "https://t.me/cv_screener_bot"
+  repo: "https://github.com/habiibullahm/cv-screener"
+---
+
+Telegram HR tool that compares a job description to candidate PDF CVs with rule-based
+keyword matching — match scores, keyword gaps, and in-session ranking.
