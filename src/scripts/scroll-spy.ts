@@ -10,10 +10,25 @@ const sections = [
 
 type SectionId = (typeof sections)[number];
 
+/**
+ * While a nav click/hash jump is in flight, keep the highlight on the target.
+ * IntersectionObserver mid-scroll is what made rapid header taps look inconsistent.
+ */
+let pinnedSection: SectionId | null = null;
+let unlockTimer = 0;
+let scrollGen = 0;
+
+function isSectionId(id: string): id is SectionId {
+  return (sections as readonly string[]).includes(id);
+}
+
+function prefersReducedMotion(): boolean {
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
 function setActive(sectionId: string) {
-  const activeNav = sectionId;
   document.querySelectorAll<HTMLAnchorElement>("[data-nav-link]").forEach((link) => {
-    const match = link.dataset.navLink === activeNav;
+    const match = link.dataset.navLink === sectionId;
     if (match) {
       link.setAttribute("aria-current", "true");
       link.classList.add("bg-accent", "text-white");
@@ -26,23 +41,60 @@ function setActive(sectionId: string) {
   });
 }
 
-function hashSection(): SectionId | null {
-  const id = decodeURIComponent(window.location.hash.replace(/^#/, ""));
-  return (sections as readonly string[]).includes(id) ? (id as SectionId) : null;
+function clearPin(gen: number) {
+  if (gen !== scrollGen) return;
+  window.clearTimeout(unlockTimer);
+  pinnedSection = null;
 }
 
-/** While settling on a deep link, ignore IO so Home does not steal the highlight. */
-let hashLockUntil = 0;
+/** Pin highlight until smooth scroll settles (scrollend) or timeout. */
+function pinNav(sectionId: SectionId, ms = 1800) {
+  const gen = ++scrollGen;
+  pinnedSection = sectionId;
+  setActive(sectionId);
+  window.clearTimeout(unlockTimer);
+
+  const onScrollEnd = () => {
+    if (gen !== scrollGen) return;
+    setActive(sectionId);
+    // Short hold so trailing IO from the last frame cannot flip the pill.
+    unlockTimer = window.setTimeout(() => clearPin(gen), 120);
+  };
+
+  window.addEventListener("scrollend", onScrollEnd, { once: true });
+  unlockTimer = window.setTimeout(() => {
+    window.removeEventListener("scrollend", onScrollEnd);
+    onScrollEnd();
+  }, ms);
+}
+
+function hashSection(): SectionId | null {
+  const id = decodeURIComponent(window.location.hash.replace(/^#/, ""));
+  return isSectionId(id) ? id : null;
+}
+
+function goToSection(sectionId: SectionId) {
+  pinNav(sectionId, prefersReducedMotion() ? 200 : 1800);
+  const el = document.getElementById(sectionId);
+  if (!el) return;
+  el.scrollIntoView({
+    behavior: prefersReducedMotion() ? "auto" : "smooth",
+    block: "start",
+  });
+}
 
 const initialHash = hashSection();
 if (initialHash) {
-  setActive(initialHash);
-  hashLockUntil = Date.now() + 400;
+  pinNav(initialHash, 600);
 }
 
 const observer = new IntersectionObserver(
   (entries) => {
-    if (Date.now() < hashLockUntil) return;
+    if (pinnedSection) {
+      setActive(pinnedSection);
+      return;
+    }
+
     const visible = entries
       .filter((e) => e.isIntersecting)
       .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
@@ -59,8 +111,34 @@ for (const id of sections) {
 }
 
 document.querySelectorAll<HTMLAnchorElement>("[data-nav-link]").forEach((link) => {
-  link.addEventListener("click", () => {
+  link.addEventListener("click", (event) => {
     const id = link.dataset.navLink;
-    if (id) setActive(id);
+    if (!id || !isSectionId(id)) return;
+
+    const href = link.getAttribute("href") ?? "";
+    // Same-page hash links: own the scroll so rapid taps cannot race the browser.
+    if (href.startsWith("#")) {
+      event.preventDefault();
+      if (window.location.hash !== `#${id}`) {
+        history.pushState(null, "", `#${id}`);
+      }
+      goToSection(id);
+      link.blur();
+      return;
+    }
+
+    // Cross-page (/#section from detail): pin for when we land; browser navigates.
+    pinNav(id);
   });
+});
+
+window.addEventListener("hashchange", () => {
+  const id = hashSection();
+  // hash-scroll.ts owns the jump; we only lock the highlight.
+  if (id) pinNav(id, prefersReducedMotion() ? 200 : 1800);
+});
+
+window.addEventListener("popstate", () => {
+  const id = hashSection();
+  if (id) goToSection(id);
 });
