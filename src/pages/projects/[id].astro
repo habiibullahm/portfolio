@@ -39,8 +39,13 @@ const pageTitle = `${data.title} · ${site.name}`;
 
 <BaseLayout title={pageTitle} description={data.outcome}>
   <header class="border-b border-line bg-mist">
-    <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 md:px-6">
-      <a href="/" class="font-display text-sm font-semibold text-ink no-underline">
+    <div
+      class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-4 md:px-6"
+    >
+      <a
+        href="/#home"
+        class="font-display text-sm font-semibold text-ink no-underline hover:text-accent"
+      >
         {site.name}
       </a>
       <a
@@ -53,7 +58,7 @@ const pageTitle = `${data.title} · ${site.name}`;
   </header>
 
   <main id="main" class="mx-auto max-w-6xl px-4 py-12 md:px-6 md:py-16">
-    <div class="flex flex-col gap-6 sm:flex-row sm:items-start">
+    <div class="flex flex-col gap-8 md:flex-row md:items-start md:gap-10">
       {
         imageSrc && (
           <div class="size-28 shrink-0 overflow-hidden rounded-md border border-line bg-mist sm:size-32">
@@ -67,16 +72,18 @@ const pageTitle = `${data.title} · ${site.name}`;
           </div>
         )
       }
-      <div class="min-w-0">
+      <div class="min-w-0 flex-1">
         <p class="font-mono text-xs tracking-wide text-muted">
           {sectionLabel} · {data.domain}
         </p>
         <h1 class="mt-2 text-3xl md:text-4xl">{data.title}</h1>
-        <p class="mt-2 font-mono text-xs tracking-wide text-muted">
+        <p class="mt-3 font-mono text-xs tracking-wide text-muted">
           {data.stack.join(" · ")}
         </p>
-        <p class="mt-4 max-w-2xl text-muted">{data.outcome}</p>
-        <div class="mt-4 flex flex-wrap gap-4 font-display text-sm">
+        <p class="mt-5 max-w-2xl text-lg leading-relaxed text-muted">
+          {data.outcome}
+        </p>
+        <div class="mt-6 flex flex-wrap gap-5 font-display text-sm">
           {
             live && (
               <a
@@ -105,27 +112,27 @@ const pageTitle = `${data.title} · ${site.name}`;
       </div>
     </div>
 
-    <div class="mt-14 border-t border-line pt-12">
+    <div class="mt-16 max-w-3xl border-t border-line pt-12">
       <p class="font-mono text-xs tracking-widest text-muted">ABOUT</p>
-      <div class="mt-8 space-y-10">
+      <div class="mt-10 space-y-12">
         <section>
           <h2 class="font-display text-xl">What it is</h2>
-          <p class="mt-3 max-w-3xl leading-relaxed text-muted">{data.what}</p>
+          <p class="mt-3 leading-relaxed text-muted">{data.what}</p>
         </section>
         <section>
           <h2 class="font-display text-xl">Why it exists</h2>
-          <p class="mt-3 max-w-3xl leading-relaxed text-muted">{data.why}</p>
+          <p class="mt-3 leading-relaxed text-muted">{data.why}</p>
         </section>
         <section>
           <h2 class="font-display text-xl">How it works</h2>
-          <p class="mt-3 max-w-3xl leading-relaxed text-muted">{data.how}</p>
+          <p class="mt-3 leading-relaxed text-muted">{data.how}</p>
         </section>
       </div>
     </div>
 
     {
       previews.length > 0 && (
-        <section class="mt-14 border-t border-line pt-12">
+        <section class="mt-16 border-t border-line pt-12">
           <p class="font-mono text-xs tracking-widest text-muted">PREVIEW</p>
           <h2 class="mt-2 font-display text-xl">Product UI</h2>
           <ul class={previewListClass}>
@@ -145,4 +152,23 @@ const pageTitle = `${data.title} · ${site.name}`;
       )
     }
   </main>
+
+  <footer class="border-t border-line">
+    <div
+      class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-8 md:px-6"
+    >
+      <a
+        href="/#home"
+        class="font-display text-sm text-muted no-underline hover:text-ink"
+      >
+        {site.name}
+      </a>
+      <a
+        href="/#projects"
+        class="font-display text-sm text-accent no-underline hover:underline"
+      >
+        Back to projects
+      </a>
+    </div>
+  </footer>
 </BaseLayout>

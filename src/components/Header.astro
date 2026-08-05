@@ -2,6 +2,16 @@
 import { nav, safeExternalUrl, site } from "../data/site";
 
 const mailto = safeExternalUrl(`mailto:${site.email}`);
+const pathname = Astro.url.pathname;
+const onHome = pathname === "/" || pathname === "";
+const onProject = pathname.startsWith("/projects/");
+
+function navHref(id: string): string {
+  return onHome ? `#${id}` : `/#${id}`;
+}
+
+const homeHref = onHome ? "#home" : "/#home";
+const initialActive = onProject ? "projects" : onHome ? "home" : null;
 ---
 
 <header
@@ -13,7 +23,8 @@ const mailto = safeExternalUrl(`mailto:${site.email}`);
   >
     <div class="flex min-w-0 items-center">
       <a
-        href="#home"
+        href={homeHref}
+        data-nav-home
         class="font-display text-sm font-semibold text-ink no-underline md:hidden"
         aria-label={`${site.name} — home`}
       >
@@ -29,23 +40,26 @@ const mailto = safeExternalUrl(`mailto:${site.email}`);
           class="mx-auto flex w-full max-w-6xl flex-col gap-1 px-4 py-3 md:mx-0 md:w-auto md:flex-row md:flex-nowrap md:gap-1 md:px-0 md:py-0"
         >
           {
-            nav.map((item) => (
-              <li class="w-full md:w-auto md:shrink-0">
-                <a
-                  href={item.href}
-                  data-nav-link={item.id}
-                  {...(item.id === "home" ? { "aria-current": "true" } : {})}
-                  class:list={[
-                    "block rounded-md px-3 py-3 text-center font-display text-sm font-medium no-underline transition-colors md:inline-block md:px-3 md:py-2",
-                    item.id === "home"
-                      ? "bg-accent text-white"
-                      : "text-muted hover:text-ink",
-                  ]}
-                >
-                  {item.label}
-                </a>
-              </li>
-            ))
+            nav.map((item) => {
+              const active = initialActive === item.id;
+              return (
+                <li class="w-full md:w-auto md:shrink-0">
+                  <a
+                    href={navHref(item.id)}
+                    data-nav-link={item.id}
+                    {...(active ? { "aria-current": "true" as const } : {})}
+                    class:list={[
+                      "block rounded-md px-3 py-3 text-center font-display text-sm font-medium no-underline transition-colors md:inline-block md:px-3 md:py-2",
+                      active
+                        ? "bg-accent text-white"
+                        : "text-muted hover:text-ink",
+                    ]}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              );
+            })
           }
         </ul>
       </nav>
@@ -104,7 +118,7 @@ const mailto = safeExternalUrl(`mailto:${site.email}`);
   const iconClose = document.getElementById("nav-icon-close");
 
   if (toggle && nav && iconOpen && iconClose) {
-    const setOpen = (open) => {
+    const setOpen = (open: boolean) => {
       toggle.setAttribute("aria-expanded", open ? "true" : "false");
       toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
       nav.classList.toggle("hidden", !open);
