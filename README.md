@@ -28,4 +28,4 @@ See [docs/FEATURED.md](docs/FEATURED.md) — Task Management (portfolio app) + P
 ## Content
 
 - Chrome / experience / contributions: `src/data/site.ts`
-- Projects: `src/content/projects/*.mdx`
+- Projects: `src/content/projects/*.mdx` — detail previews can be images or video (Task Management: demo video; Tool Helper: images + lightbox)

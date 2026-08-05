@@ -17,12 +17,37 @@ const { data } = project;
 const live = data.links?.live ? safeExternalUrl(data.links.live) : null;
 const repo = data.links?.repo ? safeExternalUrl(data.links.repo) : null;
 const imageSrc = safeSitePath(data.image);
+
+type PreviewImage = { type: "image"; src: string; alt: string };
+type PreviewVideo = {
+  type: "video";
+  src: string;
+  srcMp4?: string;
+  poster?: string;
+  alt: string;
+};
+type PreviewItem = PreviewImage | PreviewVideo;
+
 const previews = (data.previews ?? [])
-  .map((item) => {
+  .map((item): PreviewItem | null => {
     const src = safeSitePath(item.src);
-    return src ? { src, alt: item.alt } : null;
+    if (!src) return null;
+    if (item.type === "video") {
+      const srcMp4 = item.srcMp4 ? safeSitePath(item.srcMp4) : undefined;
+      const poster = item.poster ? safeSitePath(item.poster) : undefined;
+      return {
+        type: "video",
+        src,
+        ...(srcMp4 ? { srcMp4 } : {}),
+        ...(poster ? { poster } : {}),
+        alt: item.alt,
+      };
+    }
+    return { type: "image", src, alt: item.alt };
   })
-  .filter((item): item is { src: string; alt: string } => item !== null);
+  .filter((item): item is PreviewItem => item !== null);
+
+const hasImageLightbox = previews.some((item) => item.type === "image");
 
 const sectionLabel =
   data.section === "tool-helper" ? "Tool Helper" : "Featured";
@@ -30,6 +55,8 @@ const isPhonePreview = data.section === "tool-helper";
 const previewImgClass = isPhonePreview
   ? "mx-auto h-auto w-full max-w-[16rem] rounded-md border border-line sm:mx-0 sm:max-w-[18rem]"
   : "h-auto w-full max-w-3xl rounded-md border border-line";
+const previewVideoClass =
+  "h-auto w-full max-w-3xl rounded-md border border-line bg-ink/5";
 const previewListClass = isPhonePreview
   ? "mt-6 grid gap-6 sm:grid-cols-2 sm:gap-8"
   : "mt-6 space-y-6";
@@ -136,119 +163,149 @@ const pageTitle = `${data.title} · ${site.name}`;
           <p class="font-mono text-xs tracking-widest text-muted">PREVIEW</p>
           <h2 class="mt-2 font-display text-xl">Product UI</h2>
           <ul class={previewListClass}>
-            {previews.map((item) => (
-              <li>
-                <button
-                  type="button"
-                  class="group block w-full cursor-zoom-in border-0 bg-transparent p-0 text-left"
-                  data-preview-open
-                  data-preview-src={item.src}
-                  data-preview-alt={item.alt}
-                  aria-label={`Enlarge preview: ${item.alt}`}
-                >
-                  <img
-                    src={item.src}
-                    alt={item.alt}
-                    class={`${previewImgClass} transition group-hover:opacity-90`}
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </button>
-              </li>
-            ))}
+            {previews.map((item) =>
+              item.type === "video" ? (
+                <li>
+                  <video
+                    class={previewVideoClass}
+                    controls
+                    playsinline
+                    preload="metadata"
+                    poster={item.poster}
+                    aria-label={item.alt}
+                  >
+                    <source src={item.src} type="video/webm" />
+                    {item.srcMp4 && (
+                      <source src={item.srcMp4} type="video/mp4" />
+                    )}
+                  </video>
+                </li>
+              ) : (
+                <li>
+                  <button
+                    type="button"
+                    class="group block w-full cursor-zoom-in border-0 bg-transparent p-0 text-left"
+                    data-preview-open
+                    data-preview-src={item.src}
+                    data-preview-alt={item.alt}
+                    aria-label={`Enlarge preview: ${item.alt}`}
+                  >
+                    <img
+                      src={item.src}
+                      alt={item.alt}
+                      class={`${previewImgClass} transition group-hover:opacity-90`}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </button>
+                </li>
+              ),
+            )}
           </ul>
         </section>
       )
     }
   </main>
 
-  <dialog
-    id="preview-lightbox"
-    class="preview-lightbox m-0 border-0 bg-transparent p-0"
-    aria-label="Preview image"
-  >
-    <div
-      id="preview-lightbox-stage"
-      class="relative flex max-h-[85vh] max-w-[min(92vw,1100px)] items-start justify-center"
-    >
-      <form method="dialog" class="absolute -right-1 -top-1 z-10 sm:-right-2 sm:-top-2">
-        <button
-          type="submit"
-          class="flex size-9 items-center justify-center rounded-md border border-mist/30 bg-ink/60 text-mist backdrop-blur-sm hover:bg-ink/80"
-          aria-label="Close"
+  {
+    hasImageLightbox && (
+      <>
+        <dialog
+          id="preview-lightbox"
+          class="preview-lightbox m-0 border-0 bg-transparent p-0"
+          aria-label="Preview image"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            aria-hidden="true"
-            class="size-5"
+          <div
+            id="preview-lightbox-stage"
+            class="relative flex max-h-[85vh] max-w-[min(92vw,1100px)] items-start justify-center"
           >
-            <path d="M6 6l12 12M18 6L6 18"></path>
-          </svg>
-        </button>
-      </form>
-      <img
-        id="preview-lightbox-img"
-        src=""
-        alt=""
-        class="max-h-[85vh] w-auto max-w-full rounded-md object-contain"
-      />
-    </div>
-  </dialog>
+            <form
+              method="dialog"
+              class="absolute -right-1 -top-1 z-10 sm:-right-2 sm:-top-2"
+            >
+              <button
+                type="submit"
+                class="flex size-9 items-center justify-center rounded-md border border-mist/30 bg-ink/60 text-mist backdrop-blur-sm hover:bg-ink/80"
+                aria-label="Close"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  aria-hidden="true"
+                  class="size-5"
+                >
+                  <path d="M6 6l12 12M18 6L6 18"></path>
+                </svg>
+              </button>
+            </form>
+            <img
+              id="preview-lightbox-img"
+              src=""
+              alt=""
+              class="max-h-[85vh] w-auto max-w-full rounded-md object-contain"
+            />
+          </div>
+        </dialog>
 
-  <style>
-    #preview-lightbox.preview-lightbox {
-      position: fixed;
-      inset: 0;
-      width: 100vw;
-      max-width: none;
-      height: 100dvh;
-      max-height: none;
-      margin: 0;
-      padding: 1.5rem;
-      background: transparent;
-    }
+        <style>
+          #preview-lightbox.preview-lightbox {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            max-width: none;
+            height: 100dvh;
+            max-height: none;
+            margin: 0;
+            padding: 1.5rem;
+            background: transparent;
+          }
 
-    #preview-lightbox[open] {
-      display: grid;
-      place-items: center;
-    }
+          #preview-lightbox[open] {
+            display: grid;
+            place-items: center;
+          }
 
-    #preview-lightbox::backdrop {
-      background: rgb(24 38 56 / 0.45);
-    }
-  </style>
+          #preview-lightbox::backdrop {
+            background: rgb(24 38 56 / 0.45);
+          }
+        </style>
 
-  <script>
-    const dialog = document.getElementById("preview-lightbox");
-    const img = document.getElementById("preview-lightbox-img");
-    if (dialog instanceof HTMLDialogElement && img instanceof HTMLImageElement) {
-      document.querySelectorAll("[data-preview-open]").forEach((btn) => {
-        if (!(btn instanceof HTMLButtonElement)) return;
-        btn.addEventListener("click", () => {
-          const src = btn.dataset.previewSrc;
-          const alt = btn.dataset.previewAlt ?? "";
-          if (!src || !src.startsWith("/") || src.startsWith("//")) return;
-          img.src = src;
-          img.alt = alt;
-          dialog.showModal();
-        });
-      });
+        <script>
+          const dialog = document.getElementById("preview-lightbox");
+          const img = document.getElementById("preview-lightbox-img");
+          if (
+            dialog instanceof HTMLDialogElement &&
+            img instanceof HTMLImageElement
+          ) {
+            document.querySelectorAll("[data-preview-open]").forEach((btn) => {
+              if (!(btn instanceof HTMLButtonElement)) return;
+              btn.addEventListener("click", () => {
+                const src = btn.dataset.previewSrc;
+                const alt = btn.dataset.previewAlt ?? "";
+                if (!src || !src.startsWith("/") || src.startsWith("//")) return;
+                img.src = src;
+                img.alt = alt;
+                dialog.showModal();
+              });
+            });
 
-      dialog.addEventListener("click", (event) => {
-        if (event.target === dialog) dialog.close();
-      });
+            dialog.addEventListener("click", (event) => {
+              if (event.target === dialog) dialog.close();
+            });
 
-      dialog.addEventListener("close", () => {
-        img.removeAttribute("src");
-        img.alt = "";
-      });
-    }
-  </script>
+            dialog.addEventListener("close", () => {
+              img.removeAttribute("src");
+              img.alt = "";
+            });
+          }
+        </script>
+      </>
+    )
+  }
 
   <footer class="border-t border-line">
     <div

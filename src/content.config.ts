@@ -4,7 +4,28 @@ import { z } from "astro/zod";
 
 const rootRelativePath = z
   .string()
-  .regex(/^\/(?!\/)/, "Image must be a root-relative path like /images/...");
+  .regex(/^\/(?!\/)/, "Path must be root-relative like /images/...");
+
+const imagePreview = z.object({
+  type: z.literal("image"),
+  src: rootRelativePath,
+  alt: z.string(),
+});
+
+const videoPreview = z.object({
+  type: z.literal("video"),
+  src: rootRelativePath,
+  srcMp4: rootRelativePath.optional(),
+  poster: rootRelativePath.optional(),
+  alt: z.string(),
+});
+
+const previewItem = z.preprocess((value) => {
+  if (value && typeof value === "object" && !("type" in value)) {
+    return { ...value, type: "image" };
+  }
+  return value;
+}, z.discriminatedUnion("type", [imagePreview, videoPreview]));
 
 const projects = defineCollection({
   loader: glob({ pattern: "**/*.mdx", base: "./src/content/projects" }),
@@ -23,15 +44,8 @@ const projects = defineCollection({
     what: z.string(),
     why: z.string(),
     how: z.string(),
-    /** UI screenshots / product previews on the detail page. */
-    previews: z
-      .array(
-        z.object({
-          src: rootRelativePath,
-          alt: z.string(),
-        }),
-      )
-      .optional(),
+    /** UI screenshots / product videos on the detail page. */
+    previews: z.array(previewItem).optional(),
     draft: z.boolean().default(false),
     links: z
       .object({
