@@ -1,7 +1,7 @@
 <button
   type="button"
   id="scroll-top"
-  class="pointer-events-none fixed bottom-6 right-4 z-30 inline-flex size-11 translate-y-2 items-center justify-center rounded-md border border-ink/15 bg-mist text-ink opacity-0 shadow-sm transition duration-200 hover:border-accent hover:text-accent focus-visible:opacity-100 md:right-6"
+  class="scroll-top pointer-events-none fixed bottom-6 right-4 z-30 inline-flex size-11 translate-y-2 items-center justify-center rounded-md border border-ink/15 bg-mist text-ink opacity-0 shadow-sm transition duration-200 hover:border-accent hover:text-accent focus-visible:opacity-100 md:right-6"
   aria-label="Back to top"
   aria-hidden="true"
   tabindex="-1"
@@ -21,15 +21,38 @@
   </svg>
 </button>
 
+<style>
+  .scroll-top.is-visible {
+    pointer-events: auto;
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+
 <script>
-  const button = document.getElementById("scroll-top");
-  if (button) {
+  let abort: AbortController | null = null;
+  let raf = 0;
+
+  const prefersReducedMotion = () =>
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  function initScrollTop() {
+    abort?.abort();
+    if (raf) {
+      cancelAnimationFrame(raf);
+      raf = 0;
+    }
+
+    const button = document.getElementById("scroll-top");
+    if (!button) return;
+
     const threshold = 400;
     const footerHidePx = 160;
     let menuOpen = false;
+    let visible = false;
 
-    const prefersReducedMotion = () =>
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    abort = new AbortController();
+    const { signal } = abort;
 
     const nearFooter = () => {
       const doc = document.documentElement;
@@ -38,34 +61,53 @@
       return remaining < footerHidePx;
     };
 
-    const syncVisibility = () => {
-      const show = window.scrollY > threshold && !menuOpen && !nearFooter();
-      button.classList.toggle("pointer-events-none", !show);
-      button.classList.toggle("opacity-0", !show);
-      button.classList.toggle("translate-y-2", !show);
-      button.classList.toggle("opacity-100", show);
-      button.classList.toggle("translate-y-0", show);
+    const applyVisibility = (show: boolean) => {
+      if (show === visible) return;
+      visible = show;
+      button.classList.toggle("is-visible", show);
       button.setAttribute("aria-hidden", show ? "false" : "true");
       button.tabIndex = show ? 0 : -1;
     };
 
-    window.addEventListener("scroll", syncVisibility, { passive: true });
-    window.addEventListener("resize", syncVisibility, { passive: true });
-    document.addEventListener("nav-menu-toggle", (event) => {
-      menuOpen = Boolean(
-        (event as CustomEvent<{ open?: boolean }>).detail?.open,
-      );
-      syncVisibility();
-    });
+    const syncVisibility = () => {
+      applyVisibility(window.scrollY > threshold && !menuOpen && !nearFooter());
+    };
 
-    button.addEventListener("click", () => {
-      document.dispatchEvent(new CustomEvent("scroll-to-top"));
-      window.scrollTo({
-        top: 0,
-        behavior: prefersReducedMotion() ? "auto" : "smooth",
+    const scheduleSync = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        syncVisibility();
       });
-    });
+    };
+
+    window.addEventListener("scroll", scheduleSync, { passive: true, signal });
+    window.addEventListener("resize", scheduleSync, { passive: true, signal });
+    document.addEventListener(
+      "nav-menu-toggle",
+      (event) => {
+        menuOpen = Boolean(
+          (event as CustomEvent<{ open?: boolean }>).detail?.open,
+        );
+        syncVisibility();
+      },
+      { signal },
+    );
+
+    button.addEventListener(
+      "click",
+      () => {
+        document.dispatchEvent(new CustomEvent("scroll-to-top"));
+        window.scrollTo({
+          top: 0,
+          behavior: prefersReducedMotion() ? "auto" : "smooth",
+        });
+      },
+      { signal },
+    );
 
     syncVisibility();
   }
+
+  document.addEventListener("astro:page-load", initScrollTop);
 </script>

@@ -18,7 +18,12 @@ const live = data.links?.live ? safeExternalUrl(data.links.live) : null;
 const repo = data.links?.repo ? safeExternalUrl(data.links.repo) : null;
 const imageSrc = safeSitePath(data.image);
 
-type PreviewImage = { type: "image"; src: string; alt: string };
+type PreviewImage = {
+  type: "image";
+  src: string;
+  thumb: string;
+  alt: string;
+};
 type PreviewVideo = {
   type: "video";
   src: string;
@@ -28,6 +33,10 @@ type PreviewVideo = {
 };
 type PreviewEmbed = { type: "embed"; src: string; title: string };
 type PreviewItem = PreviewImage | PreviewVideo | PreviewEmbed;
+
+function thumbPath(src: string): string {
+  return src.replace(/(\.[^.]+)$/, "-thumb$1");
+}
 
 const previews = (data.previews ?? [])
   .map((item): PreviewItem | null => {
@@ -48,7 +57,8 @@ const previews = (data.previews ?? [])
         alt: item.alt,
       };
     }
-    return { type: "image", src, alt: item.alt };
+    const thumb = safeSitePath(thumbPath(src)) ?? src;
+    return { type: "image", src, thumb, alt: item.alt };
   })
   .filter((item): item is PreviewItem => item !== null);
 
@@ -105,6 +115,8 @@ const pageTitle = `${data.title} · ${site.name}`;
               alt={data.imageAlt}
               width="128"
               height="128"
+              fetchpriority="high"
+              decoding="async"
               class="size-full object-cover"
             />
           </div>
@@ -217,9 +229,13 @@ const pageTitle = `${data.title} · ${site.name}`;
                 <li>
                   <video
                     class={previewVideoClass}
+                    data-autoplay-demo
+                    autoplay
                     controls
+                    muted
+                    loop
                     playsinline
-                    preload="metadata"
+                    preload="auto"
                     poster={item.poster}
                     aria-label={item.alt}
                   >
@@ -242,8 +258,10 @@ const pageTitle = `${data.title} · ${site.name}`;
                   aria-label={`Enlarge preview: ${item.alt}`}
                 >
                   <img
-                    src={item.src}
+                    src={item.thumb}
                     alt={item.alt}
+                    width="540"
+                    height="810"
                     class={`${previewImgClass} transition group-hover:opacity-90`}
                     loading="lazy"
                     decoding="async"
@@ -300,39 +318,86 @@ const pageTitle = `${data.title} · ${site.name}`;
             background: rgb(24 38 56 / 0.45);
           }
         </style>
-
-        <script>
-          const dialog = document.getElementById("preview-lightbox");
-          const img = document.getElementById("preview-lightbox-img");
-          if (
-            dialog instanceof HTMLDialogElement &&
-            img instanceof HTMLImageElement
-          ) {
-            document.querySelectorAll("[data-preview-open]").forEach((btn) => {
-              if (!(btn instanceof HTMLButtonElement)) return;
-              btn.addEventListener("click", () => {
-                const src = btn.dataset.previewSrc;
-                const alt = btn.dataset.previewAlt ?? "";
-                if (!src || !src.startsWith("/") || src.startsWith("//")) return;
-                img.src = src;
-                img.alt = alt;
-                dialog.showModal();
-              });
-            });
-
-            dialog.addEventListener("click", (event) => {
-              if (event.target === dialog) dialog.close();
-            });
-
-            dialog.addEventListener("close", () => {
-              img.removeAttribute("src");
-              img.alt = "";
-            });
-          }
-        </script>
       </>
     )
   }
+
+  <script>
+    let abort: AbortController | null = null;
+
+    function initProjectDetailInteractions() {
+      abort?.abort();
+      abort = new AbortController();
+      const { signal } = abort;
+
+      document.querySelectorAll<HTMLVideoElement>("[data-autoplay-demo]").forEach(
+        (video) => {
+          const reduce = window.matchMedia(
+            "(prefers-reduced-motion: reduce)",
+          ).matches;
+          if (reduce) {
+            video.removeAttribute("autoplay");
+            video.pause();
+            video.currentTime = 0;
+            return;
+          }
+          video.muted = true;
+          video.playsInline = true;
+          const play = () => {
+            void video.play().catch(() => {
+              /* Autoplay may still be blocked; controls remain. */
+            });
+          };
+          if (video.readyState >= 2) play();
+          else video.addEventListener("loadeddata", play, { once: true, signal });
+        },
+      );
+
+      const dialog = document.getElementById("preview-lightbox");
+      const img = document.getElementById("preview-lightbox-img");
+      if (
+        !(dialog instanceof HTMLDialogElement) ||
+        !(img instanceof HTMLImageElement)
+      ) {
+        return;
+      }
+
+      document.querySelectorAll("[data-preview-open]").forEach((btn) => {
+        if (!(btn instanceof HTMLButtonElement)) return;
+        btn.addEventListener(
+          "click",
+          () => {
+            const src = btn.dataset.previewSrc;
+            const alt = btn.dataset.previewAlt ?? "";
+            if (!src || !src.startsWith("/") || src.startsWith("//")) return;
+            img.src = src;
+            img.alt = alt;
+            dialog.showModal();
+          },
+          { signal },
+        );
+      });
+
+      dialog.addEventListener(
+        "click",
+        (event) => {
+          if (event.target === dialog) dialog.close();
+        },
+        { signal },
+      );
+
+      dialog.addEventListener(
+        "close",
+        () => {
+          img.removeAttribute("src");
+          img.alt = "";
+        },
+        { signal },
+      );
+    }
+
+    document.addEventListener("astro:page-load", initProjectDetailInteractions);
+  </script>
 
   <footer class="border-t border-line">
     <div
