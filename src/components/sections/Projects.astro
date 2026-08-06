@@ -41,7 +41,11 @@ function projectLinks(project: CollectionEntry<"projects">) {
           return (
             <li class="grid gap-4 md:grid-cols-[8rem_1fr] md:items-start md:gap-6">
               {imageSrc ? (
-                <div class={thumbClass}>
+                <div
+                  class={thumbClass}
+                  transition:name={`project-thumb-${project.id}`}
+                  transition:animate="none"
+                >
                   <img
                     src={imageSrc}
                     alt={project.data.imageAlt}
@@ -118,7 +122,11 @@ function projectLinks(project: CollectionEntry<"projects">) {
               return (
                 <li class="grid gap-4 md:grid-cols-[8rem_1fr] md:items-start md:gap-6">
                   {imageSrc ? (
-                    <div class={thumbClass}>
+                    <div
+                      class={thumbClass}
+                      transition:name={`project-thumb-${project.id}`}
+                      transition:animate="none"
+                    >
                       <img
                         src={imageSrc}
                         alt={project.data.imageAlt}

@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { softPage } from "../../lib/page-transition";
 import { safeExternalUrl, safeSitePath, site } from "../../data/site";
 
 export async function getStaticPaths() {
@@ -105,11 +106,20 @@ const pageTitle = `${data.title} · ${site.name}`;
     </div>
   </header>
 
-  <main id="main" class="mx-auto max-w-6xl px-4 py-12 md:px-6 md:py-16">
+  <main
+    id="main"
+    class="mx-auto max-w-6xl px-4 py-12 md:px-6 md:py-16"
+    transition:animate={softPage}
+    transition:name="page-main"
+  >
     <div class="flex flex-col gap-8 md:flex-row md:items-start md:gap-10">
       {
         imageSrc && (
-          <div class="size-28 shrink-0 overflow-hidden rounded-md border border-line bg-mist sm:size-32">
+          <div
+            class="size-28 shrink-0 overflow-hidden rounded-md border border-line bg-mist sm:size-32"
+            transition:name={`project-thumb-${project.id}`}
+            transition:animate="none"
+          >
             <img
               src={imageSrc}
               alt={data.imageAlt}

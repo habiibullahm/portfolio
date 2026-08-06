@@ -8,11 +8,12 @@ import Projects from "../components/sections/Projects.astro";
 import About from "../components/sections/About.astro";
 import Experience from "../components/sections/Experience.astro";
 import Contact from "../components/sections/Contact.astro";
+import { softPage } from "../lib/page-transition";
 ---
 
 <BaseLayout enableScrollSpy>
   <Header />
-  <main id="main">
+  <main id="main" transition:animate={softPage} transition:name="page-main">
     <Hero />
     <Contributions />
     <Projects />
