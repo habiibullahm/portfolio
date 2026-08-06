@@ -7,6 +7,8 @@
 @import "@fontsource/ibm-plex-mono/400.css";
 @import "@fontsource/ibm-plex-mono/500.css";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-display: "Syne", ui-sans-serif, system-ui, sans-serif;
   --font-body: "Source Serif 4", ui-serif, Georgia, serif;
@@ -20,9 +22,23 @@
   --color-accent-soft: #ccfbf1;
 }
 
+html.dark {
+  --color-mist: #121a24;
+  --color-ink: #e8eef4;
+  --color-muted: #9aa8b8;
+  --color-line: #2a3646;
+  --color-accent: #2dd4bf;
+  --color-accent-soft: #164e48;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
+    color-scheme: light;
+  }
+
+  html.dark {
+    color-scheme: dark;
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -43,6 +59,27 @@
 
   :focus-visible {
     @apply outline-2 outline-offset-2 outline-accent;
+  }
+}
+
+@layer components {
+  /* Inverse bar stays dark in both themes (footer chrome). */
+  .site-footer {
+    background: #132033;
+    color: #e8eef4;
+  }
+
+  html.dark .site-footer {
+    background: #0a1018;
+    color: #e8eef4;
+  }
+
+  .site-footer a {
+    color: rgb(232 238 244 / 0.8);
+  }
+
+  .site-footer a:hover {
+    color: #e8eef4;
   }
 }
 

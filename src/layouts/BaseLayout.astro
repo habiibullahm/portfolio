@@ -37,6 +37,20 @@ const {
     <title>{title}</title>
     <script is:inline>
       (function () {
+        try {
+          var stored = localStorage.getItem("theme");
+          var theme =
+            stored === "light" || stored === "dark"
+              ? stored
+              : window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? "dark"
+                : "light";
+          if (theme === "dark") document.documentElement.classList.add("dark");
+        } catch (_) {}
+      })();
+    </script>
+    <script is:inline>
+      (function () {
         if (!location.hash || location.hash === "#") return;
         if ("scrollRestoration" in history) history.scrollRestoration = "manual";
         document.documentElement.classList.add("await-hash");
@@ -53,6 +67,7 @@ const {
     <slot />
     <ScrollTop />
     <script>
+      import "../scripts/theme.ts";
       import "../scripts/hash-scroll.ts";
     </script>
     {

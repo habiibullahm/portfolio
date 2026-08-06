@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import ThemeToggle from "../../components/ThemeToggle.astro";
 import { safeExternalUrl, safeSitePath, site } from "../../data/site";
 
 export async function getStaticPaths() {
@@ -86,12 +87,15 @@ const pageTitle = `${data.title} · ${site.name}`;
       >
         {site.name}
       </a>
-      <a
-        href="/#projects"
-        class="font-display text-sm text-muted no-underline hover:text-ink"
-      >
-        ← Projects
-      </a>
+      <div class="flex items-center gap-2 sm:gap-4">
+        <a
+          href="/#projects"
+          class="font-display text-sm text-muted no-underline hover:text-ink"
+        >
+          ← Projects
+        </a>
+        <ThemeToggle />
+      </div>
     </div>
   </header>
 

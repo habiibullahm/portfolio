@@ -6,7 +6,7 @@ const github = safeExternalUrl(site.socials.github);
 const linkedin = safeExternalUrl(site.socials.linkedin);
 ---
 
-<footer class="bg-ink text-mist">
+<footer class="site-footer">
   <div
     class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-10 md:px-6"
   >
@@ -21,7 +21,7 @@ const linkedin = safeExternalUrl(site.socials.linkedin);
             target="_blank"
             rel="noopener noreferrer"
             aria-label="GitHub"
-            class="inline-flex text-mist/80 no-underline transition hover:text-mist"
+            class="inline-flex text-inherit no-underline transition opacity-80 hover:opacity-100"
           >
             <img
               src="/images/icons/github.svg"
@@ -40,7 +40,7 @@ const linkedin = safeExternalUrl(site.socials.linkedin);
             target="_blank"
             rel="noopener noreferrer"
             aria-label="LinkedIn"
-            class="inline-flex text-mist/80 no-underline transition hover:text-mist"
+            class="inline-flex text-inherit no-underline transition opacity-80 hover:opacity-100"
           >
             <img
               src="/images/icons/linkedin.svg"

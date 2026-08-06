@@ -1,5 +1,6 @@
 ---
 import { nav, safeExternalUrl, site } from "../data/site";
+import ThemeToggle from "./ThemeToggle.astro";
 
 const mailto = safeExternalUrl(`mailto:${site.email}`);
 const pathname = Astro.url.pathname;
@@ -76,6 +77,7 @@ const initialActive = onProject ? "projects" : onHome ? "home" : null;
           </a>
         )
       }
+      <ThemeToggle />
       <button
         type="button"
         id="nav-toggle"
