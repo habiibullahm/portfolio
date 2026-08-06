@@ -28,4 +28,4 @@ See [docs/FEATURED.md](docs/FEATURED.md) — Task Management (portfolio app) + P
 ## Content
 
 - Chrome / experience / contributions: `src/data/site.ts`
-- Projects: `src/content/projects/*.mdx` — detail previews can be live interactive embeds (Task Management), enlargeable screenshots (Telegram bots), or video
+- Projects: `src/content/projects/*.mdx` — detail previews can be interactive UI video (Task Management), enlargeable screenshots (Telegram bots), or live embeds
