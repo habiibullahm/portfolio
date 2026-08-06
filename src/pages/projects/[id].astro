@@ -26,10 +26,15 @@ type PreviewVideo = {
   poster?: string;
   alt: string;
 };
-type PreviewItem = PreviewImage | PreviewVideo;
+type PreviewEmbed = { type: "embed"; src: string; title: string };
+type PreviewItem = PreviewImage | PreviewVideo | PreviewEmbed;
 
 const previews = (data.previews ?? [])
   .map((item): PreviewItem | null => {
+    if (item.type === "embed") {
+      const src = safeExternalUrl(item.src);
+      return src ? { type: "embed", src, title: item.title } : null;
+    }
     const src = safeSitePath(item.src);
     if (!src) return null;
     if (item.type === "video") {
@@ -48,6 +53,10 @@ const previews = (data.previews ?? [])
   .filter((item): item is PreviewItem => item !== null);
 
 const hasImageLightbox = previews.some((item) => item.type === "image");
+const imagePreviews = previews.filter(
+  (item): item is PreviewImage => item.type === "image",
+);
+const otherPreviews = previews.filter((item) => item.type !== "image");
 
 const sectionLabel =
   data.section === "tool-helper" ? "Tool Helper" : "Featured";
@@ -58,7 +67,10 @@ const previewImgClass = isPhonePreview
 const previewVideoClass = isPhonePreview
   ? "mx-auto h-auto w-full max-w-[16rem] rounded-md border border-line bg-ink/5 sm:mx-0 sm:max-w-[18rem]"
   : "h-auto w-full max-w-3xl rounded-md border border-line bg-ink/5";
-const previewListClass = "mt-6 space-y-6";
+const previewListClass =
+  isPhonePreview && imagePreviews.length > 1
+    ? "mt-6 grid gap-6 sm:grid-cols-2 sm:gap-8"
+    : "mt-6 space-y-6";
 
 const pageTitle = `${data.title} · ${site.name}`;
 ---
@@ -162,8 +174,40 @@ const pageTitle = `${data.title} · ${site.name}`;
           <p class="font-mono text-xs tracking-widest text-muted">PREVIEW</p>
           <h2 class="mt-2 font-display text-xl">Product UI</h2>
           <ul class={previewListClass}>
-            {previews.map((item) =>
-              item.type === "video" ? (
+            {otherPreviews.map((item) =>
+              item.type === "embed" ? (
+                <li class="max-w-3xl">
+                  <div class="overflow-hidden rounded-md border border-line bg-mist">
+                    <div class="relative aspect-[16/10] w-full bg-ink/5">
+                      <iframe
+                        src={item.src}
+                        title={item.title}
+                        class="absolute inset-0 h-full w-full border-0"
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                        allow="clipboard-write"
+                        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
+                      />
+                    </div>
+                  </div>
+                  <p class="mt-3 text-sm text-muted">
+                    Interactive live UI — use the demo inside the frame, or open{" "}
+                    {live ? (
+                      <a
+                        href={live}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="text-accent no-underline hover:underline"
+                      >
+                        Live
+                      </a>
+                    ) : (
+                      "Live"
+                    )}{" "}
+                    in a new tab.
+                  </p>
+                </li>
+              ) : item.type === "video" ? (
                 <li>
                   <video
                     class={previewVideoClass}
@@ -179,28 +223,43 @@ const pageTitle = `${data.title} · ${site.name}`;
                     )}
                   </video>
                 </li>
-              ) : (
-                <li>
-                  <button
-                    type="button"
-                    class="group block w-full cursor-zoom-in border-0 bg-transparent p-0 text-left"
-                    data-preview-open
-                    data-preview-src={item.src}
-                    data-preview-alt={item.alt}
-                    aria-label={`Enlarge preview: ${item.alt}`}
-                  >
-                    <img
-                      src={item.src}
-                      alt={item.alt}
-                      class={`${previewImgClass} transition group-hover:opacity-90`}
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </button>
-                </li>
-              ),
+              ) : null,
             )}
+            {imagePreviews.map((item) => (
+              <li>
+                <button
+                  type="button"
+                  class="group block w-full cursor-zoom-in border-0 bg-transparent p-0 text-left"
+                  data-preview-open
+                  data-preview-src={item.src}
+                  data-preview-alt={item.alt}
+                  aria-label={`Enlarge preview: ${item.alt}`}
+                >
+                  <img
+                    src={item.src}
+                    alt={item.alt}
+                    class={`${previewImgClass} transition group-hover:opacity-90`}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </button>
+              </li>
+            ))}
           </ul>
+          {isPhonePreview && live && (
+            <p class="mt-6 text-sm text-muted">
+              Telegram blocks in-page embeds — open{" "}
+              <a
+                href={live}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-accent no-underline hover:underline"
+              >
+                Live
+              </a>{" "}
+              to chat with the bot interactively.
+            </p>
+          )}
         </section>
       )
     }

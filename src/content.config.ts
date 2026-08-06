@@ -6,6 +6,13 @@ const rootRelativePath = z
   .string()
   .regex(/^\/(?!\/)/, "Path must be root-relative like /images/...");
 
+const httpsUrl = z
+  .string()
+  .url()
+  .refine((value) => value.startsWith("https:"), {
+    message: "Embed URL must be https",
+  });
+
 const imagePreview = z.object({
   type: z.literal("image"),
   src: rootRelativePath,
@@ -20,12 +27,19 @@ const videoPreview = z.object({
   alt: z.string(),
 });
 
+/** Live interactive UI (iframe). Telegram and other frame-blocked hosts will not work. */
+const embedPreview = z.object({
+  type: z.literal("embed"),
+  src: httpsUrl,
+  title: z.string(),
+});
+
 const previewItem = z.preprocess((value) => {
   if (value && typeof value === "object" && !("type" in value)) {
     return { ...value, type: "image" };
   }
   return value;
-}, z.discriminatedUnion("type", [imagePreview, videoPreview]));
+}, z.discriminatedUnion("type", [imagePreview, videoPreview, embedPreview]));
 
 const projects = defineCollection({
   loader: glob({ pattern: "**/*.mdx", base: "./src/content/projects" }),
@@ -44,7 +58,7 @@ const projects = defineCollection({
     what: z.string(),
     why: z.string(),
     how: z.string(),
-    /** UI screenshots / product videos on the detail page. */
+    /** Screenshots, videos, or live interactive embeds on the detail page. */
     previews: z.array(previewItem).optional(),
     draft: z.boolean().default(false),
     links: z
