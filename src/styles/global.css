@@ -21,14 +21,9 @@
 }
 
 @layer base {
+  /* Smooth scrolling is owned by scroll-spy / ScrollTop JS so CSS + JS do not stack. */
   html {
-    scroll-behavior: smooth;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    html {
-      scroll-behavior: auto;
-    }
+    scroll-behavior: auto;
   }
 
   body {

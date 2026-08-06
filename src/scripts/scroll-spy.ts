@@ -17,6 +17,9 @@ type SectionId = (typeof sections)[number];
 let pinnedSection: SectionId | null = null;
 let unlockTimer = 0;
 let scrollGen = 0;
+let lastActive: string | null = null;
+let observer: IntersectionObserver | null = null;
+let abort: AbortController | null = null;
 
 function isSectionId(id: string): id is SectionId {
   return (sections as readonly string[]).includes(id);
@@ -27,6 +30,9 @@ function prefersReducedMotion(): boolean {
 }
 
 function setActive(sectionId: string) {
+  if (sectionId === lastActive) return;
+  lastActive = sectionId;
+
   document.querySelectorAll<HTMLAnchorElement>("[data-nav-link]").forEach((link) => {
     const match = link.dataset.navLink === sectionId;
     if (match) {
@@ -83,62 +89,96 @@ function goToSection(sectionId: SectionId) {
   });
 }
 
-const initialHash = hashSection();
-if (initialHash) {
-  pinNav(initialHash, 600);
+function teardown(): void {
+  observer?.disconnect();
+  observer = null;
+  abort?.abort();
+  abort = null;
+  window.clearTimeout(unlockTimer);
+  pinnedSection = null;
+  lastActive = null;
 }
 
-const observer = new IntersectionObserver(
-  (entries) => {
-    if (pinnedSection) {
-      setActive(pinnedSection);
-      return;
-    }
+export function initScrollSpy(): void {
+  teardown();
 
-    const visible = entries
-      .filter((e) => e.isIntersecting)
-      .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-    if (visible[0]?.target.id) {
-      setActive(visible[0].target.id);
-    }
-  },
-  { rootMargin: "-20% 0px -55% 0px", threshold: [0.1, 0.25, 0.5] },
-);
+  // Homepage-only: detail pages have no section anchors.
+  if (!document.getElementById("home")) return;
 
-for (const id of sections) {
-  const el = document.getElementById(id);
-  if (el) observer.observe(el);
-}
+  abort = new AbortController();
+  const { signal } = abort;
 
-document.querySelectorAll<HTMLAnchorElement>("[data-nav-link]").forEach((link) => {
-  link.addEventListener("click", (event) => {
-    const id = link.dataset.navLink;
-    if (!id || !isSectionId(id)) return;
+  const initialHash = hashSection();
+  if (initialHash) {
+    pinNav(initialHash, 600);
+  }
 
-    const href = link.getAttribute("href") ?? "";
-    // Same-page hash links: own the scroll so rapid taps cannot race the browser.
-    if (href.startsWith("#")) {
-      event.preventDefault();
-      if (window.location.hash !== `#${id}`) {
-        history.pushState(null, "", `#${id}`);
+  observer = new IntersectionObserver(
+    (entries) => {
+      if (pinnedSection) {
+        setActive(pinnedSection);
+        return;
       }
-      goToSection(id);
-      link.blur();
-      return;
-    }
 
-    // Cross-page (/#section from detail): pin for when we land; browser navigates.
-    pinNav(id);
+      const visible = entries
+        .filter((e) => e.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+      if (visible[0]?.target.id) {
+        setActive(visible[0].target.id);
+      }
+    },
+    { rootMargin: "-20% 0px -55% 0px", threshold: [0, 1] },
+  );
+
+  for (const id of sections) {
+    const el = document.getElementById(id);
+    if (el) observer.observe(el);
+  }
+
+  document.querySelectorAll<HTMLAnchorElement>("[data-nav-link]").forEach((link) => {
+    link.addEventListener(
+      "click",
+      (event) => {
+        const id = link.dataset.navLink;
+        if (!id || !isSectionId(id)) return;
+
+        const href = link.getAttribute("href") ?? "";
+        // Same-page hash links: own the scroll so rapid taps cannot race the browser.
+        if (href.startsWith("#")) {
+          event.preventDefault();
+          if (window.location.hash !== `#${id}`) {
+            history.pushState(null, "", `#${id}`);
+          }
+          goToSection(id);
+          link.blur();
+          return;
+        }
+
+        // Cross-page (/#section from detail): pin for when we land; router navigates.
+        pinNav(id);
+      },
+      { signal },
+    );
   });
-});
 
-window.addEventListener("hashchange", () => {
-  const id = hashSection();
-  // hash-scroll.ts owns the jump; we only lock the highlight.
-  if (id) pinNav(id, prefersReducedMotion() ? 200 : 1800);
-});
+  window.addEventListener(
+    "hashchange",
+    () => {
+      const id = hashSection();
+      // hash-scroll.ts owns the jump; we only lock the highlight.
+      if (id) pinNav(id, prefersReducedMotion() ? 200 : 1800);
+    },
+    { signal },
+  );
 
-window.addEventListener("popstate", () => {
-  const id = hashSection();
-  if (id) goToSection(id);
-});
+  window.addEventListener(
+    "popstate",
+    () => {
+      const id = hashSection();
+      if (id) goToSection(id);
+    },
+    { signal },
+  );
+}
+
+document.addEventListener("astro:page-load", initScrollSpy);

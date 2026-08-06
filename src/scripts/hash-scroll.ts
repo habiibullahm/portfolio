@@ -57,21 +57,30 @@ function scheduleHashScroll(): void {
   });
 }
 
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", scheduleHashScroll);
-} else {
-  scheduleHashScroll();
+let failsafeTimer = 0;
+let listenersBound = false;
+
+function bindGlobalListeners(): void {
+  if (listenersBound) return;
+  listenersBound = true;
+
+  window.addEventListener("load", () => {
+    scrollToHash();
+  });
+  window.addEventListener("hashchange", () => {
+    scrollToHash();
+  });
 }
 
-window.addEventListener("load", () => {
-  scrollToHash();
-});
-window.addEventListener("hashchange", () => {
-  scrollToHash();
-});
+export function initHashScroll(): void {
+  bindGlobalListeners();
+  window.clearTimeout(failsafeTimer);
+  scheduleHashScroll();
+  // Failsafe: never leave the page invisible if the target is missing.
+  failsafeTimer = window.setTimeout(() => {
+    document.documentElement.classList.add("hash-ready");
+    document.documentElement.classList.remove("await-hash");
+  }, 800);
+}
 
-// Failsafe: never leave the page invisible if the target is missing.
-window.setTimeout(() => {
-  document.documentElement.classList.add("hash-ready");
-  document.documentElement.classList.remove("await-hash");
-}, 800);
+document.addEventListener("astro:page-load", initHashScroll);

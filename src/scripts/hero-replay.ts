@@ -30,13 +30,23 @@ function isHomeTrigger(target: EventTarget | null): boolean {
   return href === "#home" || href === "/#home";
 }
 
+let abort: AbortController | null = null;
+let observer: IntersectionObserver | null = null;
+
 export function initHeroReplay(): void {
+  abort?.abort();
+  observer?.disconnect();
+  abort = null;
+  observer = null;
+
   const home = document.getElementById("home");
   if (!home) return;
 
+  abort = new AbortController();
+  const { signal } = abort;
   let hasLeftHero = false;
 
-  const observer = new IntersectionObserver(
+  observer = new IntersectionObserver(
     (entries) => {
       for (const entry of entries) {
         if (!entry.isIntersecting) {
@@ -53,22 +63,30 @@ export function initHeroReplay(): void {
   );
   observer.observe(home);
 
-  document.addEventListener("click", (event) => {
-    if (!isHomeTrigger(event.target)) return;
-    if (window.scrollY < 80) {
-      replayHeroAnimation();
-      return;
-    }
-    hasLeftHero = true;
-  });
+  document.addEventListener(
+    "click",
+    (event) => {
+      if (!isHomeTrigger(event.target)) return;
+      if (window.scrollY < 80) {
+        replayHeroAnimation();
+        return;
+      }
+      hasLeftHero = true;
+    },
+    { signal },
+  );
 
-  document.addEventListener("scroll-to-top", () => {
-    if (window.scrollY < 80) {
-      replayHeroAnimation();
-      return;
-    }
-    hasLeftHero = true;
-  });
+  document.addEventListener(
+    "scroll-to-top",
+    () => {
+      if (window.scrollY < 80) {
+        replayHeroAnimation();
+        return;
+      }
+      hasLeftHero = true;
+    },
+    { signal },
+  );
 }
 
-initHeroReplay();
+document.addEventListener("astro:page-load", initHeroReplay);

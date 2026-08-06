@@ -112,12 +112,21 @@ const initialActive = onProject ? "projects" : onHome ? "home" : null;
 </header>
 
 <script>
-  const toggle = document.getElementById("nav-toggle");
-  const nav = document.getElementById("primary-nav");
-  const iconOpen = document.getElementById("nav-icon-open");
-  const iconClose = document.getElementById("nav-icon-close");
+  let abort: AbortController | null = null;
 
-  if (toggle && nav && iconOpen && iconClose) {
+  function initHeaderNav() {
+    abort?.abort();
+    abort = null;
+
+    const toggle = document.getElementById("nav-toggle");
+    const nav = document.getElementById("primary-nav");
+    const iconOpen = document.getElementById("nav-icon-open");
+    const iconClose = document.getElementById("nav-icon-close");
+    if (!toggle || !nav || !iconOpen || !iconClose) return;
+
+    abort = new AbortController();
+    const { signal } = abort;
+
     const setOpen = (open: boolean) => {
       toggle.setAttribute("aria-expanded", open ? "true" : "false");
       toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
@@ -129,17 +138,25 @@ const initialActive = onProject ? "projects" : onHome ? "home" : null;
       );
     };
 
-    toggle.addEventListener("click", () => {
-      setOpen(toggle.getAttribute("aria-expanded") !== "true");
-    });
+    toggle.addEventListener(
+      "click",
+      () => {
+        setOpen(toggle.getAttribute("aria-expanded") !== "true");
+      },
+      { signal },
+    );
 
     nav.querySelectorAll("a").forEach((link) => {
-      link.addEventListener("click", () => setOpen(false));
+      link.addEventListener("click", () => setOpen(false), { signal });
     });
 
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape") setOpen(false);
-    });
+    document.addEventListener(
+      "keydown",
+      (event) => {
+        if (event.key === "Escape") setOpen(false);
+      },
+      { signal },
+    );
 
     const mq = window.matchMedia("(min-width: 768px)");
     const syncDesktop = () => {
@@ -150,7 +167,9 @@ const initialActive = onProject ? "projects" : onHome ? "home" : null;
         nav.classList.add("hidden");
       }
     };
-    mq.addEventListener("change", syncDesktop);
+    mq.addEventListener("change", syncDesktop, { signal });
     syncDesktop();
   }
+
+  document.addEventListener("astro:page-load", initHeaderNav);
 </script>

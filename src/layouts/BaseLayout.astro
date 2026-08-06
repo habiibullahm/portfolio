@@ -1,4 +1,5 @@
 ---
+import { ClientRouter } from "astro:transitions";
 import "../styles/global.css";
 import ScrollTop from "../components/ScrollTop.astro";
 import { site } from "../data/site";
@@ -8,7 +9,7 @@ interface Props {
   description?: string;
   /** Skip-link target; must exist on the page (e.g. #main). */
   skipHref?: string;
-  /** Homepage section spy only — leave off on detail pages. */
+  /** @deprecated Scroll-spy self-activates on the homepage via astro:page-load. */
   enableScrollSpy?: boolean;
 }
 
@@ -16,7 +17,6 @@ const {
   title = site.seo.title,
   description = site.seo.description,
   skipHref = "#main",
-  enableScrollSpy = false,
 } = Astro.props;
 ---
 
@@ -35,6 +35,7 @@ const {
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
+    <ClientRouter />
     <script is:inline>
       (function () {
         if (!location.hash || location.hash === "#") return;
@@ -54,13 +55,7 @@ const {
     <ScrollTop />
     <script>
       import "../scripts/hash-scroll.ts";
+      import "../scripts/scroll-spy.ts";
     </script>
-    {
-      enableScrollSpy && (
-        <script>
-          import "../scripts/scroll-spy.ts";
-        </script>
-      )
-    }
   </body>
 </html>
