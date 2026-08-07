@@ -146,8 +146,10 @@ export function initScrollSpy(): void {
         // Same-page hash links: own the scroll so rapid taps cannot race the browser.
         if (href.startsWith("#")) {
           event.preventDefault();
+          // replaceState: avoid stacking /#section entries so Back from a
+          // project detail returns to the homepage instead of orphan hashes.
           if (window.location.hash !== `#${id}`) {
-            history.pushState(null, "", `#${id}`);
+            history.replaceState(null, "", `#${id}`);
           }
           goToSection(id);
           link.blur();
