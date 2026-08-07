@@ -15,13 +15,13 @@ stack:
   - "Neon"
 image: "/images/projects/trendplan.png"
 imageAlt: "TrendPlan logo"
-what: "A Bahasa Indonesia web app for planning one TikTok idea per weekday around the Couple Date Ideas niche. Sign in, set a weekly goal, browse trends and recommendations, then fill a seven-day planner — drag cards between days, edit captions and status, and track progress on the dashboard."
+what: "A Bahasa Indonesia web app for planning one TikTok idea per weekday around the Couple Date Ideas niche. Sign in, set a weekly goal, browse trends and recommendations, then fill a seven-day planner — add a trend or create your own idea on any empty day, drag cards between days, edit captions and status, and track progress on the dashboard."
 why: "I wanted another shipped full-stack product that proves auth, a real Postgres schema with day uniqueness, optimistic UI (DnD + toasts), and a public Vercel/Neon deploy — not just a local demo."
 how: "Next.js App Router with Auth.js (credentials/JWT), Prisma 7 on PostgreSQL (Neon), and a single-layout planner board with @dnd-kit. Occupied days swap; Sonner handles feedback. Deployed on Vercel with marketplace Postgres."
 previews:
   - type: embed
     src: "https://trendplan.vercel.app/demo"
-    title: "TrendPlan read-only demo planner"
+    title: "TrendPlan demo app tour"
 draft: false
 links:
   live: "https://trendplan.vercel.app"
@@ -29,6 +29,7 @@ links:
 ---
 
 Weekly TikTok content planner for the Couple Date Ideas niche: auth, onboarding,
-trend recommendations, a seven-day planner with drag-and-drop day moves, and
-progress tracking — shipped on Vercel with Neon Postgres. The Interactive UI
-embed is a public read-only `/demo` planner (no login); open Live to use the full app.
+trend recommendations, a seven-day planner with drag-and-drop day moves, adding a
+trend or creating your own idea on any empty day, and progress tracking — shipped
+on Vercel with Neon Postgres. The Interactive UI embed is a public read-only `/demo`
+app tour (no login); open Live to use the full app.
