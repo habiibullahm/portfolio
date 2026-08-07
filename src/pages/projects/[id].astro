@@ -200,7 +200,6 @@ const pageTitle = `${data.title} · ${site.name}`;
                       <iframe
                         src={item.src}
                         title={item.title}
-                        data-preview-embed
                         class="absolute inset-0 h-full w-full border-0"
                         loading="lazy"
                         referrerpolicy="no-referrer-when-downgrade"
@@ -330,30 +329,6 @@ const pageTitle = `${data.title} · ${site.name}`;
       abort?.abort();
       abort = new AbortController();
       const { signal } = abort;
-
-      // #region agent log
-      fetch("http://127.0.0.1:7819/ingest/86a3afd6-80fc-4b3f-9aac-0bc34e6d5a31", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-Debug-Session-Id": "ead71c",
-        },
-        body: JSON.stringify({
-          sessionId: "ead71c",
-          runId: "post-fix",
-          hypothesisId: "A-auth-iframe",
-          location: "projects/[id].astro:init",
-          message: "project detail preview probe",
-          data: {
-            href: location.href,
-            embedCount: document.querySelectorAll("[data-preview-embed]").length,
-            imagePreviewCount: document.querySelectorAll("[data-preview-open]")
-              .length,
-          },
-          timestamp: Date.now(),
-        }),
-      }).catch(() => {});
-      // #endregion
 
       document.querySelectorAll<HTMLVideoElement>("[data-autoplay-demo]").forEach(
         (video) => {
