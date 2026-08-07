@@ -1,0 +1,2 @@
+{"sessionId":"ead71c","runId":"post-fix","hypothesisId":"parallel-auth","location":"planner/page.tsx","message":"planner redirect: missing session (safe path)","data":{"hasSession":false,"hasUser":false},"timestamp":1786078238987}
+{"sessionId":"ead71c","runId":"post-fix","hypothesisId":"parallel-auth","location":"planner/page.tsx","message":"planner redirect: missing session (safe path)","data":{"hasSession":false,"hasUser":false},"timestamp":1786087454620}

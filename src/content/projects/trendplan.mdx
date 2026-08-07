@@ -18,10 +18,12 @@ imageAlt: "TrendPlan logo"
 what: "A Bahasa Indonesia web app for planning one TikTok idea per weekday around the Couple Date Ideas niche. Sign in, set a weekly goal, browse trends and recommendations, then fill a seven-day planner — drag cards between days, edit captions and status, and track progress on the dashboard."
 why: "I wanted another shipped full-stack product that proves auth, a real Postgres schema with day uniqueness, optimistic UI (DnD + toasts), and a public Vercel/Neon deploy — not just a local demo."
 how: "Next.js App Router with Auth.js (credentials/JWT), Prisma 7 on PostgreSQL (Neon), and a single-layout planner board with @dnd-kit. Occupied days swap; Sonner handles feedback. Deployed on Vercel with marketplace Postgres."
+# Live iframe embed is intentionally omitted: /planner and other app routes require
+# auth cookies (SameSite=Lax) that do not work inside a cross-site portfolio frame.
 previews:
-  - type: embed
-    src: "https://trendplan.vercel.app"
-    title: "TrendPlan live app"
+  - type: image
+    src: "/images/projects/trendplan.png"
+    alt: "TrendPlan brand mark — open Live to try the signed-in planner"
 draft: false
 links:
   live: "https://trendplan.vercel.app"
@@ -30,4 +32,5 @@ links:
 
 Weekly TikTok content planner for the Couple Date Ideas niche: auth, onboarding,
 trend recommendations, a seven-day planner with drag-and-drop day moves, and
-progress tracking — shipped on Vercel with Neon Postgres.
+progress tracking — shipped on Vercel with Neon Postgres. Open **Live** to sign in
+and use the full planner (app routes are not embedded here).
