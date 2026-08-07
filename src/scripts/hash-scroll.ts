@@ -1,6 +1,10 @@
 /**
  * Land on location.hash (e.g. /#projects from detail) without showing Home first.
+ * Also repairs ClientRouter misses: browser Back can update the URL to /#section
+ * while the project-detail DOM is still mounted.
  */
+
+import { navigate } from "astro:transitions/client";
 
 function hashId(): string | null {
   const raw = window.location.hash;
@@ -17,13 +21,37 @@ function syncNavToSection(sectionId: string): void {
     if (match) {
       link.setAttribute("aria-current", "true");
       link.classList.add("bg-accent", "text-white");
-      link.classList.remove("text-muted");
     } else {
       link.removeAttribute("aria-current");
       link.classList.remove("bg-accent", "text-white");
       link.classList.add("text-muted");
     }
   });
+}
+
+/** True when location.pathname matches the mounted page shell. */
+function domMatchesLocation(): boolean {
+  const path = location.pathname.replace(/\/$/, "") || "/";
+  const hasHome = !!document.getElementById("home");
+  if (path === "/" && !hasHome) return false;
+  if (path.startsWith("/projects") && hasHome) return false;
+  return true;
+}
+
+let repairing = false;
+
+/**
+ * ClientRouter sometimes updates the URL on popstate without swapping DOM
+ * (detail page still showing while location is /#projects). Force a transition.
+ */
+function repairLocationMismatch(): boolean {
+  if (repairing || domMatchesLocation()) return false;
+  repairing = true;
+  const href = `${location.pathname}${location.search}${location.hash}`;
+  void navigate(href, { history: "replace" }).finally(() => {
+    repairing = false;
+  });
+  return true;
 }
 
 export function scrollToHash(): boolean {
@@ -68,6 +96,11 @@ function bindGlobalListeners(): void {
     scrollToHash();
   });
   window.addEventListener("hashchange", () => {
+    if (repairLocationMismatch()) return;
+    scrollToHash();
+  });
+  window.addEventListener("popstate", () => {
+    if (repairLocationMismatch()) return;
     scrollToHash();
   });
 }
