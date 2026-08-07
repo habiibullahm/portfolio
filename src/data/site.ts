@@ -5,7 +5,7 @@ export const site = {
   statement: "I design, build, and deploy end-to-end web applications that",
   statementEmphasis: "ship fast",
   summary:
-    "Leveraging modern AI workflows to accelerate development, elevate code quality, and build scalable systems.",
+    "Shipping secure APIs and full-stack products end to end — backends and interfaces that hold up in production.",
   about: {
     lead: "Building the bridge between business strategy and production code.",
     paragraphs: [
