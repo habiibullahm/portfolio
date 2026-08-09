@@ -5,6 +5,7 @@
  */
 
 import { navigate } from "astro:transitions/client";
+import { syncAllNavLinks } from "./nav-active";
 
 function hashId(): string | null {
   const raw = window.location.hash;
@@ -15,18 +16,7 @@ function hashId(): string | null {
 }
 
 function syncNavToSection(sectionId: string): void {
-  const activeNav = sectionId;
-  document.querySelectorAll<HTMLAnchorElement>("[data-nav-link]").forEach((link) => {
-    const match = link.dataset.navLink === activeNav;
-    if (match) {
-      link.setAttribute("aria-current", "true");
-      link.classList.add("bg-accent", "text-white");
-    } else {
-      link.removeAttribute("aria-current");
-      link.classList.remove("bg-accent", "text-white");
-      link.classList.add("text-muted");
-    }
-  });
+  syncAllNavLinks(sectionId);
 }
 
 /** True when location.pathname matches the mounted page shell. */

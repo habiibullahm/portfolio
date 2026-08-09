@@ -36,7 +36,7 @@ export const nav = [
     short: "OSS",
     href: "#contributions",
   },
-  { id: "projects", label: "Projects", short: "Proj.", href: "#projects" },
+  { id: "projects", label: "Projects", short: "Projects", href: "#projects" },
   { id: "about", label: "About", short: "About", href: "#about" },
   { id: "experience", label: "Experience", short: "Exp.", href: "#experience" },
   { id: "contact", label: "Contact", short: "Contact", href: "#contact" },

@@ -1,3 +1,5 @@
+import { syncAllNavLinks } from "./nav-active";
+
 /** Section ids observed for scroll-spy (aligned with primary nav). */
 const sections = [
   "home",
@@ -32,19 +34,7 @@ function prefersReducedMotion(): boolean {
 function setActive(sectionId: string) {
   if (sectionId === lastActive) return;
   lastActive = sectionId;
-
-  document.querySelectorAll<HTMLAnchorElement>("[data-nav-link]").forEach((link) => {
-    const match = link.dataset.navLink === sectionId;
-    if (match) {
-      link.setAttribute("aria-current", "true");
-      link.classList.add("bg-accent", "text-white");
-      link.classList.remove("text-muted");
-    } else {
-      link.removeAttribute("aria-current");
-      link.classList.remove("bg-accent", "text-white");
-      link.classList.add("text-muted");
-    }
-  });
+  syncAllNavLinks(sectionId);
 }
 
 function clearPin(gen: number) {

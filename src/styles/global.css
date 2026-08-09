@@ -43,7 +43,14 @@
 
 @layer utilities {
   .section-anchor {
-    scroll-margin-top: 5.5rem;
+    scroll-margin-top: 3.75rem;
+  }
+
+  @media (min-width: 768px) {
+    .section-anchor {
+      /* Floating pill + top inset — avoid clipping section titles. */
+      scroll-margin-top: 5rem;
+    }
   }
 
   /* Avoid flashing Home when landing on /#projects from a detail page. */
