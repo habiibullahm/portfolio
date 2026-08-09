@@ -1,7 +1,8 @@
 ---
-import { safeExternalUrl, site } from "../../data/site";
+import { nav, safeExternalUrl, site } from "../../data/site";
 
 const mailto = safeExternalUrl(`mailto:${site.email}`);
+const heroNav = nav.filter((item) => item.id !== "home");
 ---
 
 <section
@@ -20,8 +21,37 @@ const mailto = safeExternalUrl(`mailto:${site.email}`);
     "
   >
   </div>
+
   <div class="mx-auto max-w-6xl px-4 pb-16 pt-6 md:px-6 md:pb-24 md:pt-8">
-    <p class="font-mono text-xs tracking-widest text-muted">{site.eyebrow}</p>
+    <div class="flex items-center justify-between gap-3">
+      <p class="min-w-0 font-mono text-xs tracking-widest text-muted">
+        {site.eyebrow}
+      </p>
+
+      <nav
+        id="hero-nav"
+        aria-label="Sections"
+        class="hidden shrink-0 md:block"
+      >
+        <ul class="flex items-center gap-3">
+          {
+            heroNav.map((item) => (
+              <li>
+                <a
+                  href={`#${item.id}`}
+                  data-nav-link={item.id}
+                  title={item.label}
+                  class="font-display text-[11px] font-medium tracking-wide text-muted no-underline transition-colors hover:text-ink"
+                >
+                  {item.short}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </div>
+
     <h1
       class="hero-animate mt-4 font-display text-4xl font-semibold leading-tight text-ink md:text-6xl"
     >
@@ -44,7 +74,7 @@ const mailto = safeExternalUrl(`mailto:${site.email}`);
         href="#projects"
         class="inline-flex items-center rounded-md bg-ink px-5 py-3 font-display text-sm font-medium text-white no-underline transition hover:bg-ink/90"
       >
-        Explore projects
+        Selected work
       </a>
       {
         mailto && (
