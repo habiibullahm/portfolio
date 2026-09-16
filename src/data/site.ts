@@ -5,13 +5,13 @@ export const site = {
   statement: "I design, build, and deploy end-to-end web applications that",
   statementEmphasis: "ship fast",
   summary:
-    "Shipping secure APIs and full-stack products end to end — backends and interfaces that hold up in production.",
+    "Shipping secure APIs and full-stack products end to end — and picking up real LLM integration work along the way.",
   about: {
     lead: "Building the bridge between business strategy and production code.",
     paragraphs: [
       "I'm Habib—a Jakarta-based full-stack developer who took a slightly unconventional path into software engineering. While earning my Business Management degree at the University of Informatics and Business Indonesia (GPA 3.61), I realized I wanted to be the person actually building the products. That business background stuck with me, shaping how I approach tech today: I don't just ask how to build a feature, but why it matters to the user and the business.",
       "Currently at PT. Dans Multi Pro, I build end-to-end enterprise solutions for telecommunications clients. Day-to-day, that means engineering Java/Spring Boot microservices, tuning PostgreSQL queries, and crafting web and mobile interfaces with React and React Native. On the side, I occasionally tinker with open-source integrations on Pipedream to stay sharp with new tooling.",
-      "Whether I'm hardening API security, integrating AI workflows, or optimizing database performance, my goal remains straightforward: shipping clean, reliable software that solves real operational problems.",
+      "Outside work, I've been picking up AI engineering by building a real project — a Telegram bot that answers questions about live stock data through a grounded LLM feature designed to never invent numbers, plus a news-sentiment pipeline that classifies market headlines with structured LLM output and fallback parsing for when the model misbehaves. Whether I'm hardening API security, integrating LLM features, or optimizing database performance, my goal stays the same: shipping clean, reliable software that solves real problems.",
     ],
   },
   email: "mr.habiibullahm@gmail.com",
@@ -47,6 +47,11 @@ export const focusAreas = [
     title: "Secure REST APIs",
     blurb:
       "Build Spring Boot APIs with clear endpoints, JWT/RBAC auth, and production-minded access control.",
+  },
+  {
+    title: "AI & LLM Integration (leveling up)",
+    blurb:
+      "Currently deepening this — shipped a grounded LLM feature (prompt design against hallucination, multi-provider fallback via Groq/Claude, structured JSON output with parsing fallbacks) and operate self-hosted multi-agent CLI tooling on my own VPS.",
   },
   {
     title: "Full-Stack Delivery",
