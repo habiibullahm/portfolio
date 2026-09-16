@@ -1,0 +1,33 @@
+---
+title: "PodMark"
+outcome: "Podcast tracker with Whisper transcription and a grounded LLM summary — Obsidian/Notion export built in."
+client: "Personal / Portfolio"
+domain: "Productivity / AI"
+order: 0
+section: "featured"
+stack:
+  - "React"
+  - "TypeScript"
+  - "Zustand"
+  - "Vercel"
+  - "Supabase"
+  - "Groq"
+  - "SumoPod"
+image: "/images/projects/podmark.svg"
+imageAlt: "PodMark logo"
+what: "A podcast tracker and learning journal: find real episodes via iTunes search (or paste a YouTube link), listen, capture timestamped notes and highlights, get an AI summary grounded in what was actually said, and export everything to Obsidian or Notion."
+why: "Podcast notes usually live nowhere, or get typed from memory hours later. PodMark timestamps notes as you listen and grounds its AI summary in a real transcript of the episode — not a guess based on the title — so the summary reflects what was actually said, not what a show with that title usually covers."
+how: "React/Vite frontend with Zustand state, deployed as a single Vercel project (static frontend + /api/* serverless functions, no CORS). Audio is transcribed via Groq Whisper (segment-level timestamps, per-error-code handling for rate limits, quota, and oversized files); the summary step runs through SumoPod's OpenAI-compatible gateway, grounding on that transcript over show notes when available, and falling back to a hedged general-knowledge guess from the title when neither exists rather than refusing to answer. Accounts are optional — signed-out users get local-only storage — and the AI summary endpoint requires a verified Supabase session specifically to protect API credits from public abuse."
+previews:
+  - src: "/images/projects/podmark-home-preview.png"
+    alt: "PodMark home screen showing the current episode, listening progress, and daily goal"
+  - src: "/images/projects/podmark-summary-preview.png"
+    alt: "PodMark AI Summary grounded in the episode's real transcript, with per-bullet add-to-notes"
+draft: false
+links:
+  live: "https://podbrain-five.vercel.app"
+  repo: "https://github.com/habiibullahm/podmark"
+---
+
+Podcast tracker and learning journal: real episode search, timestamped notes,
+Whisper transcription, and a grounded LLM summary — export to Obsidian or Notion.
