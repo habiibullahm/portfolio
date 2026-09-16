@@ -1,0 +1,32 @@
+---
+title: "Sahamku"
+outcome: "Telegram bot for IDX stock signals with a grounded LLM /ask feature and automated market reports."
+client: "Personal / Portfolio"
+domain: "Fintech / AI"
+order: 0
+section: "tool-helper"
+stack:
+  - "Python"
+  - "aiogram"
+  - "Anthropic Claude"
+  - "Groq"
+  - "SQLite"
+  - "Docker"
+image: "/images/projects/sahamku.png"
+imageAlt: "Sahamku bot logo"
+what: "A Telegram bot (@sahamku_id_bot) for IDX traders: automated pre-market and after-market reports, rule-based technical signals (golden/death cross, RSI, breakout, MACD, Bollinger squeeze), a query-DSL screener, sector rollups, price/RSI alerts, and a conversational /ask command that answers stock questions grounded in that day's live indicators, signals, and news."
+why: "Retail traders drown in indicators with no context. Rule-based signals give transparent, explainable triggers instead of a black box, and /ask lets someone ask a plain question and get an answer grounded in real data — the model's system prompt instructs it to use only the numbers provided and never issue buy/sell orders (a prompt-level constraint, not a guaranteed output filter)."
+how: "Python long-polling bot (aiogram) with SQLite for OHLCV history, signals, and alerts. A scheduler runs ingestion and report jobs on a market-hours cadence, computing indicators and a weighted rule score. A batch pipeline classifies news sentiment via LLM with structured JSON output and a regex fallback for truncated responses. /ask assembles a context block from the DB and sends it to a swappable LLM provider (Claude or Groq) behind a strict grounding system prompt, with short-term conversation memory. Deployed via Docker on a self-managed VPS."
+previews:
+  - src: "/images/projects/sahamku-scan-preview.png"
+    alt: "Sahamku after-market report in Telegram showing IHSG overview, breadth, and liquid momentum signals"
+  - src: "/images/projects/sahamku-ask-preview.png"
+    alt: "Sahamku /ask command answering a technical question about BBCA grounded in live indicators"
+draft: false
+links:
+  live: "https://t.me/sahamku_id_bot"
+---
+
+Telegram bot for IDX stock signals: rule-based technical analysis, automated
+market reports, and a grounded LLM /ask feature that answers questions from
+live data without inventing numbers.
