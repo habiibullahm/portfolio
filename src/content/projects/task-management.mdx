@@ -1,6 +1,6 @@
 ---
 title: "Task Management Platform"
-outcome: "Auth, teams, Kanban, and comments — a training product deployed on Render with CI."
+outcome: "Auth, teams, Kanban, and comments — a training product with CI, split across Vercel, Neon, and a self-managed Docker host."
 client: "Personal / Portfolio"
 domain: "Productivity"
 order: 2
@@ -12,12 +12,13 @@ stack:
   - "PostgreSQL"
   - "JWT"
   - "Docker"
-  - "Render"
+  - "Vercel"
+  - "Neon"
 image: "/images/projects/task-management.png"
 imageAlt: "Task Management Platform logo"
 what: "A full-stack task app for individuals and small teams. Sign in, work in personal or team spaces, move work across Kanban columns, leave comments, and manage tasks end to end — the kind of product surface you expect from a real productivity tool."
-why: "I wanted portfolio work that proves shipping, not just UI mockups: authentication, a real database, CI, and a public deploy. This project is that practice run — UI, API, Postgres, Docker, and Render in one arc."
-how: "React talks to a Node API backed by PostgreSQL. JWT covers personal and team access. Boards handle task flow; comments live on tasks. Docker and CI keep the Render deploy repeatable."
+why: "I wanted portfolio work that proves shipping, not just UI mockups: authentication, a real database, CI, and a public deploy. This project is that practice run — UI, API, Postgres, Docker, and a multi-provider deploy in one arc."
+how: "React talks to a Node API backed by PostgreSQL. JWT covers personal and team access. Boards handle task flow; comments live on tasks. The SPA deploys to Vercel, which proxies API and Socket.IO calls to a Dockerized API on a self-managed VPS, backed by Neon Postgres."
 previews:
   - type: video
     src: "/videos/projects/task-management-preview.webm"
@@ -26,7 +27,7 @@ previews:
     alt: "Interactive Task Management walkthrough: dashboard, tasks, Kanban board, and create task"
 draft: false
 links:
-  live: "https://task-management-ui-qapw.onrender.com/"
+  live: "https://task-management-indol-zeta.vercel.app/"
   repo: "https://github.com/habiibullahm/task-management"
 ---
 
